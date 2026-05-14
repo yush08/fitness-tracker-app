@@ -1,9 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_gradients.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../../shared/widgets/glass_card.dart';
-import 'dart:ui';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -20,13 +19,16 @@ class OnboardingScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
+
               const SizedBox(height: 20),
 
-              // Top Indicators
+              // TOP SECTION
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Row(
                   children: [
+
+                    // INDICATOR
                     Container(
                       width: 42,
                       height: 14,
@@ -60,30 +62,32 @@ class OnboardingScreen extends StatelessWidget {
 
                     const Spacer(),
 
-                    // Skip Button
+                    // SKIP BUTTON
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
+                        horizontal: 26,
+                        vertical: 14,
                       ),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 1.5,
-                        ),
                         borderRadius: BorderRadius.circular(40),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.4),
+                          width: 1.4,
+                        ),
                         gradient: LinearGradient(
                           colors: [
-                            Colors.white.withOpacity(0.25),
-                            Colors.white.withOpacity(0.05),
+                            Colors.deepOrange.withOpacity(0.25),
+                            Colors.deepOrange.withOpacity(0.05),
                           ],
                         ),
                       ),
+
                       child: const Text(
-                        'SKIP',
+                        "SKIP",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ),
@@ -91,215 +95,178 @@ class OnboardingScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 60),
+              const SizedBox(height: 55),
 
+              // GOFIT TEXT
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 28),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'GoFit',
+                    "GoFit",
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black,
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
+              // HEADING
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 28),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Start your\nFitness\nJourney Now!',
+                    "Start your\nFitness\nJourney Now!",
                     style: TextStyle(
-                      fontSize: 52,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'montserrat',
-                      height: 1.05,
+                      fontSize: 44,
+                      height: 1.10,
+                      fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
 
+              // STACK AREA
               Expanded(
                 child: Stack(
+                  clipBehavior: Clip.none,
                   alignment: Alignment.center,
                   children: [
 
-                    // Clock Image
+                    // CLOCK IMAGE
                     Positioned(
-                      top: 40,
+                      top: -130,
                       child: Image.asset(
                         'assets/images/clock.png',
-                        width: 320,
+                        width: 420,
+                        fit: BoxFit.contain,
                       ),
                     ),
 
-                    // Left Glass Card
+                    // LEFT GLASS CARD
                     Positioned(
-                      right: -20,
-                      top: 140,
+                      left: -10,
+                      top: 170,
                       child: Transform.rotate(
-                        angle: -0.3,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(49),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                              sigmaX: 12,
-                              sigmaY: 12,
-                            ),
-                            child: Container(
-                              width: 248,
-                              height: 244,
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.40),
-                                borderRadius: BorderRadius.circular(49),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.40),
-                                  width: 1,
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.orange.withOpacity(0.40),
-                                    Colors.deepOrange.withOpacity(0.40),
-                                  ],
-                                ),
-                              ),
+                        angle: 0.25,
+                        child: _glassCard(
 
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-
-                                  Container(
-                                    width: 72,
-                                    height: 72,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.40),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.gps_fixed,
-                                      size: 34,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-
-                                  const Spacer(),
-
-                                  const Text(
-                                    'Stay Active',
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 10),
-
-                                  const Text(
-                                    "You haven't logged any\nworkout today. Let's get\nmoving!",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      height: 1.4,
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          title: "Today's Activity",
+                          subtitle:
+                          "Track your steps, calories,\nand progress in real-time.",
+                          icon: Icons.watch_later_outlined,
                         ),
                       ),
                     ),
 
-                    // Right Card
+                    // RIGHT GLASS CARD
                     Positioned(
-                      right: -10,
+                      right: 00,
                       top: 220,
                       child: Transform.rotate(
-                        angle: 0.45,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(49),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                              sigmaX: 12,
-                              sigmaY: 12,
-                            ),
-                            child: Container(
-                              width: 248,
-                              height: 244,
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.40),
-                                borderRadius: BorderRadius.circular(49),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.40),
-                                  width: 1,
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.orange.withOpacity(0.40),
-                                    Colors.deepOrange.withOpacity(0.40),
-                                  ],
-                                ),
-                              ),
-
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-
-                                  Container(
-                                    width: 72,
-                                    height: 72,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.40),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.gps_fixed,
-                                      size: 34,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-
-                                  const Spacer(),
-
-                                  const Text(
-                                    'Stay Active',
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 10),
-
-                                  const Text(
-                                    "You haven't logged any\nworkout today. Let's get\nmoving!",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      height: 1.4,
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        angle: -0.35,
+                        child: _glassCard(
+                          title: "Stay Active",
+                          subtitle:
+                          "You haven't logged any\nworkout today. Let's get\nmoving!",
+                          icon: Icons.gps_fixed,
                         ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // BOTTOM BUTTONS
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 22,
+                ),
+                child: Row(
+                  children: [
+
+                    // CONTINUE BUTTON
+                    Expanded(
+                      child: Container(
+                        height: 66,
+
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(
+                            color: Colors.yellow.withOpacity(0.5),
+                            width: 1,
+                          ),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFFF8BD00),
+                              Color(0xFFFC900D),
+                              Color(0xFFFC940B),
+                              Color(0xFFFC900D),
+                              Color(0xFFF8BD00),
+                            ],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.orange.withOpacity(0.35),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+
+                            Text(
+                              "Continue",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            SizedBox(width: 20),
+
+                            Icon(
+                              Icons.keyboard_double_arrow_right,
+
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 16),
+
+                    // PROFILE BUTTON
+                    Container(
+                      width: 66,
+                      height: 66,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.55),
+                        ),
+                        color: Colors.white.withOpacity(0.20),
+                      ),
+
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 34,
                       ),
                     ),
                   ],
@@ -311,4 +278,91 @@ class OnboardingScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+// GLASS CARD WIDGET
+Widget _glassCard({
+  required String title,
+  required String subtitle,
+  required IconData icon,
+
+}) {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(42),
+    child: BackdropFilter(
+      filter: ImageFilter.blur(
+        sigmaX: 14,
+        sigmaY: 14,
+      ),
+      child: Container(
+        width: 220,
+        height: 210,
+        padding: const EdgeInsets.all(22),
+
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+
+          border: Border.all(
+            color: Colors.white.withOpacity(0.50),
+            width: 1,
+          ),
+
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.grey.withOpacity(0.30),
+              Colors.grey.withOpacity(0.20),
+            ],
+          ),
+        ),
+
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            // ICON
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.20),
+              ),
+
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 25,
+              ),
+            ),
+
+            const Spacer(),
+
+            // TITLE
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // SUBTITLE
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.4,
+                color: Colors.white.withOpacity(0.88),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
