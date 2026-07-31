@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'core/routing/app_routes.dart';
+import 'core/theme/app_colors.dart';
+import 'core/theme/app_theme.dart';
+import 'core/theme/theme_controller.dart';
 import 'features/onboarding/screens/onboarding_screen.dart';
 
 void main() {
@@ -11,10 +15,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Fitness App',
-      home: const OnboardingScreen(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeController.mode,
+      builder: (context, mode, _) {
+        // Keep the token flag in sync before the theme/screens read it.
+        AppColors.isDark = mode == ThemeMode.dark;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'GoFit',
+          themeMode: mode,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          home: const OnboardingScreen(),
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+        );
+      },
     );
   }
 }

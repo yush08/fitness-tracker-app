@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_gradients.dart';
+import 'onboarding_screen_2.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -192,63 +193,67 @@ class OnboardingScreen extends StatelessWidget {
                 child: Row(
                   children: [
 
-                    // CONTINUE BUTTON
-                    Expanded(
-                      child: Container(
-                        height: 66,
-
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
-                          border: Border.all(
-                            color: Colors.yellow.withOpacity(0.5),
-                            width: 1,
-                          ),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xFFF8BD00),
-                              Color(0xFFFC900D),
-                              Color(0xFFFC940B),
-                              Color(0xFFFC900D),
-                              Color(0xFFF8BD00),
-                            ],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.orange.withOpacity(0.35),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
+                // CONTINUE BUTTON
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                          const NextOnboardingScreen(),
+                        ),
+                      );
+                      },
+                    child: Container(
+                      height: 66,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(
+                          color: Colors.yellow.withOpacity(0.5),
+                          width: 1,
+                        ),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0xFFF8BD00),
+                            Color(0xFFFC900D),
+                            Color(0xFFFC940B),
+                            Color(0xFFFC900D),
+                            Color(0xFFF8BD00),
                           ],
                         ),
-
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-
-                            Text(
-                              "Continue",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                            SizedBox(width: 20),
-
-                            Icon(
-                              Icons.keyboard_double_arrow_right,
-
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange.withOpacity(0.35),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Continue",
+                            style: TextStyle(
                               color: Colors.white,
-                              size: 28,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(width: 20),
+                          Icon(
+                            Icons.keyboard_double_arrow_right,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ],
                       ),
                     ),
-
+                  ),
+                ),
                     const SizedBox(width: 16),
 
                     // PROFILE BUTTON

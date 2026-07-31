@@ -28,4 +28,17 @@ class AppGradients {
       Color(0xFFFF6F00),
     ],
   );
+
+  /// Login / sign-up background — white at the top fading into warm orange.
+  static const LinearGradient authBackgroundGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Colors.white,
+      Colors.white,
+      Color(0xFFFFC46B),
+      Color(0xFFFB9905),
+    ],
+    stops: [0.0, 0.45, 0.8, 1.0],
+  );
 }
