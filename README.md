@@ -1,57 +1,228 @@
 # GoFit
 
-A modern fitness tracker built with Flutter — onboarding, auth, and a full
-6‑tab dashboard with charts, all in a lime / black / lavender design system
-that supports light and dark themes.
+GoFit is a modern cross-platform fitness tracking application built with Flutter. The project focuses on delivering a polished UI/UX experience with a scalable feature-first architecture, custom data visualizations, and a reusable design system. It provides a complete front-end experience including onboarding, authentication flow, fitness dashboard, activity tracking, nutrition monitoring, and profile management.
 
-> UI‑focused project: no Firebase, authentication, API, or storage. Screens
-> run on placeholder data so the whole experience is navigable end‑to‑end.
+> **Note:** This project is currently UI-focused and uses placeholder data. Backend services, authentication, and persistent storage are intentionally excluded.
+
+---
 
 ## Features
 
-- **Onboarding** — 3 animated intro screens with a glassmorphism style
-- **Auth flow** — login, sign‑up, "enter your details" ruler pickers, and
-  forgot‑password (UI only; buttons navigate into the app)
-- **Dashboard** (6 tabs behind a floating pill bottom nav):
-  - **Home** — daily summary rings, weekly bar chart, heart‑rate line,
-    sleep timeline, and achievement badges
-  - **Calories** — daily goal, meals list, macro donut, weekly overview
-  - **Stats** — monthly trend, key metrics, activity heatmap
-  - **My Feed** — activity posts with GPS route previews, likes and sharing
-  - **Profile** — goals, and links to sub‑pages
-  - **Settings** — dark‑mode toggle, units, about
-- **Sub‑pages** — Food Details, Start Activity, Personal Details,
-  Personal Goals, Privacy, Connect Watch, and About Me
-- **Theming** — one‑tap light/dark switch driven by theme‑aware color tokens
-- **Charts without dependencies** — ring gauges, donut, line, bar, sleep
-  segmented bar, activity heatmap, and GPS route preview are all drawn with
-  `CustomPainter` (only external package is `google_fonts`)
+### Authentication
+- Login screen
+- Sign Up flow
+- Forgot Password
+- User Details setup
 
-## Architecture
+### Dashboard
+- Home dashboard
+- Nutrition tracking
+- Activity feed
+- Statistics dashboard
+- Profile management
+- Settings page
 
-Feature‑first layout:
+### Fitness Components
+- Calories overview
+- Sleep tracking
+- Heart rate visualization
+- Weekly progress
+- Achievement cards
+- Personal goals
+
+### Custom Visualizations
+- Ring Gauge
+- Donut Chart
+- Line Chart
+- Weekly Bar Chart
+- Activity Heatmap
+- Route Preview
+- Segmented Progress Bar
+- Interactive Ruler Picker
+
+### Theme Support
+- Light Mode
+- Dark Mode
+- Runtime theme switching
+
+---
+
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Framework | Flutter 3.41+ |
+| Language | Dart 3.11+ |
+| UI | Material 3 |
+| Fonts | Google Fonts (Montserrat) |
+| Navigation | Navigator 1.0 |
+| State Management | setState, ValueNotifier |
+| Graphics | CustomPainter |
+| Linting | flutter_lints |
+
+---
+
+## Project Structure
 
 ```
 lib/
-├── core/            # theme, colors, sizes, routing
-├── shared/          # reusable widgets + CustomPainter charts
-└── features/        # onboarding, auth, home, nutrition, stats,
-                     # activity, profile, settings, main (shell)
+├── core/
+│   ├── routing/
+│   ├── constants/
+│   └── theme/
+│
+├── shared/
+│   └── widgets/
+│       ├── charts/
+│       └── reusable components
+│
+├── features/
+│   ├── onboarding/
+│   ├── auth/
+│   ├── home/
+│   ├── nutrition/
+│   ├── stats/
+│   ├── activity/
+│   ├── profile/
+│   ├── settings/
+│   └── main/
+│
+└── main.dart
 ```
 
-State is handled with built‑in `setState` and lightweight `ValueNotifier`
-controllers (theme + shell tab) — no state‑management package.
+---
 
-## Getting started
+## Architecture
+
+GoFit follows a **Feature-First Architecture**.
+
+- **core/** → Routing, themes, constants
+- **shared/** → Reusable widgets and design system
+- **features/** → Independent feature modules
+- **CustomPainter** → Dependency-free charts
+- **ValueNotifier** → Lightweight global state
+- **Named Routes** → Navigation
+
+This architecture keeps the codebase modular, scalable, and easy to maintain.
+
+---
+
+## Design Highlights
+
+- Custom Design System
+- Responsive Layout
+- Glassmorphism Effects
+- Smooth Animations
+- Reusable Widgets
+- Material 3
+- Modern Fitness UI
+- Consistent Typography
+
+---
+
+## Current Status
+
+### Implemented
+
+- Complete UI
+- Navigation
+- Authentication Flow
+- Dashboard
+- Custom Charts
+- Theme Switching
+- Responsive Layout
+- Feature-first Architecture
+
+### Planned
+
+- Firebase Authentication
+- Cloud Firestore
+- Activity Persistence
+- Workout Tracking
+- Notifications
+- Wearable Integration
+- REST API Integration
+- State Management (Riverpod/Bloc)
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Flutter 3.41+
+- Dart 3.11+
+- Android Studio / VS Code
+
+### Installation
 
 ```bash
+git clone https://github.com/yush08/fitness-tracker-app
+
+cd gofit
+
 flutter pub get
-flutter run            # pick a device, or:
-flutter run -d chrome  # run in the browser
+
+flutter run
 ```
 
-Requires Flutter 3.41+ (Dart 3.11+).
+---
 
-## Tech
+## Platform Support
 
-Flutter · Dart · google_fonts · Material 3
+- Android
+- iOS
+- Web
+- Windows
+- macOS
+- Linux
+
+---
+
+## Dependencies
+
+```yaml
+flutter
+google_fonts
+cupertino_icons
+```
+
+The project intentionally keeps external dependencies minimal and implements all charts using Flutter's native `CustomPainter`.
+
+---
+
+## Future Improvements
+
+- Firebase Authentication
+- Cloud Firestore
+- Local Storage
+- REST API
+- Riverpod / Bloc
+- Unit Testing
+- Widget Testing
+- CI/CD
+- Deep Linking
+- Accessibility Improvements
+
+---
+
+## Skills Demonstrated
+
+- Flutter Development
+- Dart
+- Feature-first Architecture
+- Clean UI Engineering
+- CustomPainter
+- Material Design 3
+- Responsive Design
+- Design Systems
+- Mobile UI/UX
+- Navigation
+- State Management
+- Git & GitHub
+
+---
+
+## License
+
+This project is intended for educational and portfolio purposes.
