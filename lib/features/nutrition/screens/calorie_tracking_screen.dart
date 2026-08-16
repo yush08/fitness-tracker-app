@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/charts/donut_chart.dart';
@@ -19,8 +20,11 @@ class CalorieTrackingScreen extends StatelessWidget {
     const progress = consumed / SampleNutrition.dailyGoal;
 
     return SafeArea(
-      child: ListView(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: StaggerReveal(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        step: const Duration(milliseconds: 55),
         children: [
           const AppLogo(),
           const SizedBox(height: 12),
@@ -132,6 +136,7 @@ class CalorieTrackingScreen extends StatelessWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }

@@ -1,44 +1,59 @@
 import 'package:flutter/material.dart';
 
 class AppGradients {
+  /// Primary CTA gradient — violet/purple pill (Continue, Sign In, …).
   static const LinearGradient primaryButtonGradient = LinearGradient(
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [
-      Color(0xFFF8BD00),
-      Color(0xFFFC900D),
-      Color(0xFFFC940B),
-      Color(0xFFFBA801),
-      Color(0xFFF9B702),
+      Color(0xFFA593F7),
+      Color(0xFF8B7BF0),
+      Color(0xFF7B67EC),
+      Color(0xFF6A54E4),
     ],
     stops: [
       0.0,
-      0.30,
-      0.61,
-      0.85,
-      0.94,
+      0.35,
+      0.70,
+      1.0,
     ],
   );
 
+  /// Onboarding background — soft purple at the top fading into lime green.
   static const LinearGradient onboardingBackgroundGradient = LinearGradient(
-    begin: Alignment.topLeft,
+    begin: Alignment.topCenter,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFFFFE500),
-      Color(0xFFFF6F00),
+      Color(0xFF9385D8),
+      Color(0xFFAFC162),
+      Color(0xFFC7F536),
     ],
+    stops: [0.0, 0.7, 1.0],
   );
 
-  /// Login / sign-up background — white at the top fading into warm orange.
+  /// Reversed onboarding background — lime at the top fading into purple.
+  static const LinearGradient onboardingBackgroundGradientReversed =
+      LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFFC7F536),
+      Color(0xFFAFC162),
+      Color(0xFF9385D8),
+    ],
+    stops: [0.0, 0.35, 1.0],
+  );
+
+  /// Login / sign-up background — black at the top fading into violet.
   static const LinearGradient authBackgroundGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      Colors.white,
-      Colors.white,
-      Color(0xFFFFC46B),
-      Color(0xFFFB9905),
+      Color(0xFF050506),
+      Color(0xFF0A0A12),
+      Color(0xFF3E2F82),
+      Color(0xFF8B7BF0),
     ],
-    stops: [0.0, 0.45, 0.8, 1.0],
+    stops: [0.0, 0.55, 0.9, 1.0],
   );
 }

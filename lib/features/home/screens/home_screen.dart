@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/app_bottom_nav.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../main/shell_controller.dart';
@@ -21,8 +22,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: StaggerReveal(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        step: const Duration(milliseconds: 55),
         children: [
           const AppLogo(),
           const SizedBox(height: 10),
@@ -157,6 +161,7 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ],
+        ),
       ),
     );
   }

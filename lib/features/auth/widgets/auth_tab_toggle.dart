@@ -22,7 +22,7 @@ class AuthTabToggle extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(40),
         gradient: const LinearGradient(
-          colors: [Color(0xFFF8BD00), Color(0xFFFB9905)],
+          colors: [Color(0xFF9C8BF5), Color(0xFF7358E0)],
         ),
       ),
       child: Row(

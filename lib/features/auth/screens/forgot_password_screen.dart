@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_gradients.dart';
+import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/gradient_button.dart';
 import '../widgets/auth_field.dart';
 
@@ -25,19 +26,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration:
             const BoxDecoration(gradient: AppGradients.authBackgroundGradient),
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
-            child: Column(
+            child: StaggerReveal(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 IconButton(
                   padding: EdgeInsets.zero,
                   alignment: Alignment.centerLeft,
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -45,7 +48,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   style: GoogleFonts.montserrat(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -55,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   style: GoogleFonts.montserrat(
                     fontSize: 14,
                     height: 1.5,
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.white.withOpacity(0.75),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -76,11 +79,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     );
                     Navigator.pop(context);
                   },
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFFF8BD00), Color(0xFFFB7A05)],
-                  ),
+                  gradient: AppGradients.primaryButtonGradient,
                 ),
               ],
             ),

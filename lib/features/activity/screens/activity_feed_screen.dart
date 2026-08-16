@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../shared/widgets/animations/entrance.dart';
+import '../../../shared/widgets/animations/pressable.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../data/sample_activities.dart';
 import '../widgets/activity_feed_card.dart';
@@ -13,8 +15,11 @@ class ActivityFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: StaggerReveal(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        step: const Duration(milliseconds: 60),
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,12 +50,13 @@ class ActivityFeedScreen extends StatelessWidget {
             const SizedBox(height: 18),
           ],
         ],
+        ),
       ),
     );
   }
 
   Widget _pillButton(String label, VoidCallback onTap) {
-    return GestureDetector(
+    return Pressable(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),

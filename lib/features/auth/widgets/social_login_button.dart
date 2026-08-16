@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../shared/widgets/animations/pressable.dart';
+
 /// White pill button for "login with" providers (Google / Apple).
 /// Visual only — [onTap] is optional and defaults to a no-op.
 class SocialLoginButton extends StatelessWidget {
@@ -19,7 +21,7 @@ class SocialLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Pressable(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'core/routing/app_routes.dart';
 import 'core/theme/app_colors.dart';
@@ -7,6 +8,15 @@ import 'core/theme/theme_controller.dart';
 import 'features/onboarding/screens/onboarding_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Draw edge-to-edge so screen gradients extend behind the status/nav bars
+  // instead of leaving a black strip at the bottom.
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarDividerColor: Colors.transparent,
+  ));
   runApp(const MyApp());
 }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/stat_progress_bar.dart';
@@ -14,8 +15,11 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: StaggerReveal(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        step: const Duration(milliseconds: 55),
         children: [
           const AppLogo(),
           const SizedBox(height: 20),
@@ -79,6 +83,7 @@ class ProfileScreen extends StatelessWidget {
             onTap: () => Navigator.pushNamed(context, AppRoutes.connectWatch),
           ),
         ],
+        ),
       ),
     );
   }

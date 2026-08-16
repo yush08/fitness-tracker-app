@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_gradients.dart';
+import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/gradient_button.dart';
 import '../widgets/auth_check_row.dart';
 import '../widgets/auth_field.dart';
@@ -32,12 +33,14 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration:
             const BoxDecoration(gradient: AppGradients.authBackgroundGradient),
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
-            child: Column(
+            child: StaggerReveal(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AuthTabToggle(
@@ -53,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     style: GoogleFonts.montserrat(
                       fontSize: 34,
                       fontWeight: FontWeight.w800,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -82,11 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   label: 'Sign Up',
                   onPressed: () => Navigator.pushNamed(
                       context, AppRoutes.signupDetails),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFFF8BD00), Color(0xFFFB7A05)],
-                  ),
+                  gradient: AppGradients.primaryButtonGradient,
                 ),
                 const SizedBox(height: 26),
                 Center(
@@ -95,7 +94,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     style: GoogleFonts.montserrat(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: Colors.black87,
+                      color: Colors.white,
                     ),
                   ),
                 ),

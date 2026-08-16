@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_gradients.dart';
+import '../../../shared/widgets/animations/pressable.dart';
+
 /// Shared bottom action row for the onboarding flow:
 /// a gradient "continue" pill plus a circular profile button.
 /// Keeps the three onboarding screens visually identical.
@@ -22,30 +25,20 @@ class OnboardingBottomBar extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
+            child: Pressable(
               onTap: onContinue,
               child: Container(
                 height: 66,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   border: Border.all(
-                    color: Colors.yellow.withOpacity(0.5),
+                    color: Colors.white.withOpacity(0.5),
                     width: 1,
                   ),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFFF8BD00),
-                      Color(0xFFFC900D),
-                      Color(0xFFFC940B),
-                      Color(0xFFFC900D),
-                      Color(0xFFF8BD00),
-                    ],
-                  ),
+                  gradient: AppGradients.primaryButtonGradient,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.orange.withOpacity(0.35),
+                      color: const Color(0xFF7B67EC).withOpacity(0.45),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -77,7 +70,7 @@ class OnboardingBottomBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          GestureDetector(
+          Pressable(
             onTap: onProfile,
             child: Container(
               width: 66,

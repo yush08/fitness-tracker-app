@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/text_styles.dart';
+import 'animations/pressable.dart';
 
 /// Full-width rounded action button with centered label.
 /// Accepts either a [gradient] (orange auth CTAs → white text) or a solid
@@ -31,7 +32,7 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fg = foreground ?? (gradient != null ? Colors.white : AppColors.onAccent);
-    return GestureDetector(
+    return Pressable(
       onTap: onPressed,
       child: Container(
         height: height,

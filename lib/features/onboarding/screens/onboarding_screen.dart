@@ -1,8 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_gradients.dart';
+import '../../../shared/widgets/animations/entrance.dart';
+import '../../../shared/widgets/animations/pressable.dart';
 import 'onboarding_screen_2.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -18,7 +21,9 @@ class OnboardingScreen extends StatelessWidget {
         ),
 
         child: SafeArea(
-          child: Column(
+          child: DefaultTextStyle.merge(
+            style: GoogleFonts.montserrat(),
+            child: Column(
             children: [
 
               const SizedBox(height: 20),
@@ -75,10 +80,10 @@ class OnboardingScreen extends StatelessWidget {
                           color: Colors.white.withOpacity(0.4),
                           width: 1.4,
                         ),
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            Colors.deepOrange.withOpacity(0.25),
-                            Colors.deepOrange.withOpacity(0.05),
+                            Color(0xFF9C8BF5),
+                            Color(0xFF7B67EC),
                           ],
                         ),
                       ),
@@ -99,16 +104,19 @@ class OnboardingScreen extends StatelessWidget {
               const SizedBox(height: 55),
 
               // GOFIT TEXT
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 28),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "GoFit",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
+              const FadeSlideIn(
+                delay: Duration(milliseconds: 80),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 28),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "GoFit",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -117,17 +125,20 @@ class OnboardingScreen extends StatelessWidget {
               const SizedBox(height: 18),
 
               // HEADING
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 28),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Start your\nFitness\nJourney Now!",
-                    style: TextStyle(
-                      fontSize: 44,
-                      height: 1.10,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
+              const FadeSlideIn(
+                delay: Duration(milliseconds: 180),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 28),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Start your\nFitness\nJourney Now!",
+                      style: TextStyle(
+                        fontSize: 44,
+                        height: 1.10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -142,7 +153,7 @@ class OnboardingScreen extends StatelessWidget {
 
                     // CLOCK IMAGE
                     Positioned(
-                      top: -130,
+                      top: -110,
                       child: Image.asset(
                         'assets/images/clock.png',
                         width: 420,
@@ -154,14 +165,20 @@ class OnboardingScreen extends StatelessWidget {
                     Positioned(
                       left: -10,
                       top: 170,
-                      child: Transform.rotate(
-                        angle: 0.25,
-                        child: _glassCard(
-
-                          title: "Today's Activity",
-                          subtitle:
-                          "Track your steps, calories,\nand progress in real-time.",
-                          icon: Icons.watch_later_outlined,
+                      child: FadeSlideIn(
+                        delay: const Duration(milliseconds: 320),
+                        offset: const Offset(-0.2, 0.1),
+                        child: Floating(
+                          amplitude: 7,
+                          child: Transform.rotate(
+                            angle: 0.25,
+                            child: _glassCard(
+                              title: "Today's Activity",
+                              subtitle:
+                              "Track your steps, calories,\nand progress in real-time.",
+                              icon: Icons.watch_later_outlined,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -170,13 +187,21 @@ class OnboardingScreen extends StatelessWidget {
                     Positioned(
                       right: 00,
                       top: 220,
-                      child: Transform.rotate(
-                        angle: -0.35,
-                        child: _glassCard(
-                          title: "Stay Active",
-                          subtitle:
-                          "You haven't logged any\nworkout today. Let's get\nmoving!",
-                          icon: Icons.gps_fixed,
+                      child: FadeSlideIn(
+                        delay: const Duration(milliseconds: 440),
+                        offset: const Offset(0.2, 0.1),
+                        child: Floating(
+                          amplitude: 9,
+                          phase: 0.5,
+                          child: Transform.rotate(
+                            angle: -0.35,
+                            child: _glassCard(
+                              title: "Stay Active",
+                              subtitle:
+                              "You haven't logged any\nworkout today. Let's get\nmoving!",
+                              icon: Icons.gps_fixed,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -195,7 +220,7 @@ class OnboardingScreen extends StatelessWidget {
 
                 // CONTINUE BUTTON
                 Expanded(
-                  child: GestureDetector(
+                  child: Pressable(
                     onTap: () {
                       Navigator.push(
                         context,
@@ -210,23 +235,13 @@ class OnboardingScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
                         border: Border.all(
-                          color: Colors.yellow.withOpacity(0.5),
+                          color: Colors.white.withOpacity(0.5),
                           width: 1,
                         ),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color(0xFFF8BD00),
-                            Color(0xFFFC900D),
-                            Color(0xFFFC940B),
-                            Color(0xFFFC900D),
-                            Color(0xFFF8BD00),
-                          ],
-                        ),
+                        gradient: AppGradients.primaryButtonGradient,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.orange.withOpacity(0.35),
+                            color: const Color(0xFF7B67EC).withOpacity(0.45),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -279,6 +294,7 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ],
           ),
+          ),
         ),
       ),
     );
@@ -330,15 +346,15 @@ Widget _glassCard({
             Container(
               width: 64,
               height: 64,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.20),
+                color: Colors.white,
               ),
 
               child: Icon(
                 icon,
-                color: Colors.white,
-                size: 25,
+                color: const Color(0xFF2A2A33),
+                size: 26,
               ),
             ),
 

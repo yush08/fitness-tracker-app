@@ -7,7 +7,7 @@ class AuthCheckRow extends StatelessWidget {
   final String label;
   final ValueChanged<bool> onChanged;
 
-  static const Color _orange = Color(0xFFEA6D0A);
+  static const Color _orange = Color(0xFF9C8BF5);
 
   const AuthCheckRow({
     super.key,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/routing/app_routes.dart';
+import '../../../shared/widgets/animations/entrance.dart';
+import '../../../shared/widgets/animations/pressable.dart';
 import '../../../shared/widgets/custom_textfield.dart';
 import '../../../shared/widgets/dropdown_chip.dart';
 import '../../../shared/widgets/ruler_picker.dart';
@@ -42,7 +44,7 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-          child: Column(
+          child: StaggerReveal(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -104,7 +106,7 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
               const SizedBox(height: 28),
               Align(
                 alignment: Alignment.centerRight,
-                child: GestureDetector(
+                child: Pressable(
                   onTap: () => Navigator.pushNamedAndRemoveUntil(
                       context, AppRoutes.main, (r) => false),
                   child: Container(

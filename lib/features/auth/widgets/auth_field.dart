@@ -32,7 +32,7 @@ class AuthField extends StatelessWidget {
           style: GoogleFonts.montserrat(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 10),
