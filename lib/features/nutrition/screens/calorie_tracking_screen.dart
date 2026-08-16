@@ -62,7 +62,7 @@ class CalorieTrackingScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          Text('Weekly Activity', style: AppTextStyles.screenTitle),
+          Text('Today', style: AppTextStyles.screenTitle),
           const SizedBox(height: 14),
 
           // Today's meals

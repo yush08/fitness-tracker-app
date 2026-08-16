@@ -51,7 +51,7 @@ class HomeScreen extends StatelessWidget {
                 child: SummaryGaugeCard(
                   value: '1200',
                   sub: '/2000',
-                  label: 'distance',
+                  label: 'calories',
                   progress: 0.6,
                   color: AppColors.violet,
                 ),
@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
                 child: SummaryGaugeCard(
                   value: '8.5',
                   sub: 'km',
-                  label: 'calories',
+                  label: 'distance',
                   progress: 0.55,
                   color: AppColors.chartRed,
                 ),

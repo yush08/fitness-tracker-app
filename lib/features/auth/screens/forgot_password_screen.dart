@@ -15,11 +15,28 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _email = TextEditingController();
+  String? _emailError;
+
+  static final _emailRegex = RegExp(r'^[\w.\-]+@([\w\-]+\.)+[\w\-]{2,}$');
 
   @override
   void dispose() {
     _email.dispose();
     super.dispose();
+  }
+
+  void _sendLink() {
+    final email = _email.text.trim();
+    setState(() {
+      _emailError = email.isEmpty
+          ? 'Email is required'
+          : (!_emailRegex.hasMatch(email) ? 'Enter a valid email' : null);
+    });
+    if (_emailError != null) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Reset link sent')),
+    );
+    Navigator.pop(context);
   }
 
   @override
@@ -67,18 +84,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   hint: 'Email *',
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
+                  errorText: _emailError,
                 ),
                 const SizedBox(height: 32),
                 GradientButton(
                   label: 'Send Reset Link',
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Reset link sent (demo)'),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  },
+                  onPressed: _sendLink,
                   gradient: AppGradients.primaryButtonGradient,
                 ),
               ],

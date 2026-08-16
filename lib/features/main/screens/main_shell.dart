@@ -49,12 +49,19 @@ class _MainShellState extends State<MainShell> {
           ProfileScreen(),
           SettingsScreen(),
         ];
-        return Scaffold(
-          backgroundColor: AppColors.background,
-          body: IndexedStack(index: index, children: tabs),
-          bottomNavigationBar: AppBottomNav(
-            currentIndex: index,
-            onTap: ShellController.go,
+        return PopScope(
+          // On a non-Home tab, system-back returns to Home instead of exiting.
+          canPop: index == 0,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop && index != 0) ShellController.go(0);
+          },
+          child: Scaffold(
+            backgroundColor: AppColors.background,
+            body: IndexedStack(index: index, children: tabs),
+            bottomNavigationBar: AppBottomNav(
+              currentIndex: index,
+              onTap: ShellController.go,
+            ),
           ),
         );
       },

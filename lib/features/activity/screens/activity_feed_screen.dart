@@ -27,6 +27,7 @@ class ActivityFeedScreen extends StatelessWidget {
               const AppLogo(),
               _pillButton(
                 'Start Activity',
+                Icons.add,
                 () => Navigator.pushNamed(context, AppRoutes.startActivity),
               ),
             ],
@@ -37,7 +38,8 @@ class ActivityFeedScreen extends StatelessWidget {
             children: [
               Text('Activity Feed', style: AppTextStyles.screenTitle),
               _pillButton(
-                'share',
+                'Share',
+                Icons.ios_share,
                 () => ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Activity shared to your feed')),
                 ),
@@ -55,7 +57,7 @@ class ActivityFeedScreen extends StatelessWidget {
     );
   }
 
-  Widget _pillButton(String label, VoidCallback onTap) {
+  Widget _pillButton(String label, IconData icon, VoidCallback onTap) {
     return Pressable(
       onTap: onTap,
       child: Container(
@@ -67,7 +69,7 @@ class ActivityFeedScreen extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.add, color: AppColors.onAccent, size: 16),
+            Icon(icon, color: AppColors.onAccent, size: 16),
             const SizedBox(width: 4),
             Text(
               label,

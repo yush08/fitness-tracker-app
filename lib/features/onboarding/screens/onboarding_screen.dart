@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/animations/pressable.dart';
@@ -69,7 +70,10 @@ class OnboardingScreen extends StatelessWidget {
                     const Spacer(),
 
                     // SKIP BUTTON
-                    Container(
+                    Pressable(
+                      onTap: () => Navigator.pushReplacementNamed(
+                          context, AppRoutes.login),
+                      child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 26,
                         vertical: 14,
@@ -97,25 +101,36 @@ class OnboardingScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 55),
+              const SizedBox(height: 25),
 
               // GOFIT TEXT
-              const FadeSlideIn(
-                delay: Duration(milliseconds: 80),
+              FadeSlideIn(
+                delay: const Duration(milliseconds: 220),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 28),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      "GoFit",
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                    child: Text.rich(
+                      TextSpan(
+                        style: GoogleFonts.montserrat(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        children: const [
+                          TextSpan(
+                            text: "Go",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          TextSpan(
+                            text: "Fit",
+                            style: TextStyle(color: Color(0xFF7B67EC)),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -153,7 +168,7 @@ class OnboardingScreen extends StatelessWidget {
 
                     // CLOCK IMAGE
                     Positioned(
-                      top: -110,
+                      top: -75,
                       child: Image.asset(
                         'assets/images/clock.png',
                         width: 420,
@@ -272,7 +287,10 @@ class OnboardingScreen extends StatelessWidget {
                     const SizedBox(width: 16),
 
                     // PROFILE BUTTON
-                    Container(
+                    Pressable(
+                      onTap: () => Navigator.pushReplacementNamed(
+                          context, AppRoutes.login),
+                      child: Container(
                       width: 66,
                       height: 66,
                       decoration: BoxDecoration(
@@ -288,6 +306,7 @@ class OnboardingScreen extends StatelessWidget {
                         color: Colors.white,
                         size: 34,
                       ),
+                    ),
                     ),
                   ],
                 ),

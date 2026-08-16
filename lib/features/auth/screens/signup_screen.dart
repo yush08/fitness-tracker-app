@@ -21,12 +21,32 @@ class _SignupScreenState extends State<SignupScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _showPassword = false;
+  String? _emailError;
+  String? _passwordError;
+
+  static final _emailRegex = RegExp(r'^[\w.\-]+@([\w\-]+\.)+[\w\-]{2,}$');
 
   @override
   void dispose() {
     _email.dispose();
     _password.dispose();
     super.dispose();
+  }
+
+  void _signUp() {
+    final email = _email.text.trim();
+    final password = _password.text;
+    setState(() {
+      _emailError = email.isEmpty
+          ? 'Email is required'
+          : (!_emailRegex.hasMatch(email) ? 'Enter a valid email' : null);
+      _passwordError = password.isEmpty
+          ? 'Password is required'
+          : (password.length < 6 ? 'Minimum 6 characters' : null);
+    });
+    if (_emailError == null && _passwordError == null) {
+      Navigator.pushNamed(context, AppRoutes.signupDetails);
+    }
   }
 
   @override
@@ -66,6 +86,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   hint: 'Email *',
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
+                  errorText: _emailError,
+                  onChanged: (_) {
+                    if (_emailError != null) {
+                      setState(() => _emailError = null);
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
                 AuthField(
@@ -73,6 +99,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   hint: 'Password *',
                   controller: _password,
                   obscure: !_showPassword,
+                  errorText: _passwordError,
+                  onChanged: (_) {
+                    if (_passwordError != null) {
+                      setState(() => _passwordError = null);
+                    }
+                  },
                 ),
                 const SizedBox(height: 12),
                 AuthCheckRow(
@@ -83,8 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 28),
                 GradientButton(
                   label: 'Sign Up',
-                  onPressed: () => Navigator.pushNamed(
-                      context, AppRoutes.signupDetails),
+                  onPressed: _signUp,
                   gradient: AppGradients.primaryButtonGradient,
                 ),
                 const SizedBox(height: 26),

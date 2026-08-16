@@ -21,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _rememberMe = false;
+  String? _emailError;
+  String? _passwordError;
 
   @override
   void dispose() {
@@ -31,6 +33,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _goHome() =>
       Navigator.pushNamedAndRemoveUntil(context, AppRoutes.main, (r) => false);
+
+  static final _emailRegex = RegExp(r'^[\w.\-]+@([\w\-]+\.)+[\w\-]{2,}$');
+
+  void _signIn() {
+    final email = _email.text.trim();
+    final password = _password.text;
+    setState(() {
+      _emailError = email.isEmpty
+          ? 'Email is required'
+          : (!_emailRegex.hasMatch(email) ? 'Enter a valid email' : null);
+      _passwordError = password.isEmpty
+          ? 'Password is required'
+          : (password.length < 6 ? 'Minimum 6 characters' : null);
+    });
+    if (_emailError == null && _passwordError == null) _goHome();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +87,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   hint: 'Email *',
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
+                  errorText: _emailError,
+                  onChanged: (_) {
+                    if (_emailError != null) {
+                      setState(() => _emailError = null);
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
                 AuthField(
@@ -76,6 +100,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   hint: 'Password *',
                   controller: _password,
                   obscure: true,
+                  errorText: _passwordError,
+                  onChanged: (_) {
+                    if (_passwordError != null) {
+                      setState(() => _passwordError = null);
+                    }
+                  },
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -103,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 28),
                 GradientButton(
                   label: 'Sign In',
-                  onPressed: _goHome,
+                  onPressed: _signIn,
                   gradient: AppGradients.primaryButtonGradient,
                 ),
                 const SizedBox(height: 26),

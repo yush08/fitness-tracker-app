@@ -10,11 +10,11 @@ class AppColors {
   static bool isDark = true;
 
   // ---- Brand / accent (constant across themes) ----
-  /// Signature lime — used for fills, CTAs, nav highlight, primary data.
-  static const Color accent = Color(0xFFC7F536);
+  /// Signature violet — used for fills, CTAs, nav highlight, primary data.
+  static const Color accent = Color(0xFF8B7BF0);
 
-  /// Content colour to sit on top of [accent] (near-black).
-  static const Color onAccent = Color(0xFF10120A);
+  /// Content colour to sit on top of [accent] (white for contrast on violet).
+  static const Color onAccent = Color(0xFFFFFFFF);
 
   /// Soft lavender — secondary cards & data.
   static const Color lavender = Color(0xFFCBB8F2);

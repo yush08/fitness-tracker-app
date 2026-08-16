@@ -18,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final bool pill;
   final ValueChanged<String>? onChanged;
+  final String? errorText;
 
   const CustomTextField({
     super.key,
@@ -30,6 +31,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.pill = false,
     this.onChanged,
+    this.errorText,
   });
 
   @override
@@ -60,9 +62,14 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        errorText: errorText,
+        errorStyle: GoogleFonts.montserrat(
+            color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w600),
         enabledBorder: border(Colors.transparent),
         focusedBorder: border(AppColors.accentBlue),
         border: border(Colors.transparent),
+        errorBorder: border(AppColors.error),
+        focusedErrorBorder: border(AppColors.error),
       ),
     );
   }

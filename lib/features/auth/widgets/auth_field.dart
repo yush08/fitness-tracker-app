@@ -11,6 +11,8 @@ class AuthField extends StatelessWidget {
   final bool obscure;
   final TextInputType? keyboardType;
   final Widget? suffixIcon;
+  final String? errorText;
+  final ValueChanged<String>? onChanged;
 
   const AuthField({
     super.key,
@@ -20,6 +22,8 @@ class AuthField extends StatelessWidget {
     this.obscure = false,
     this.keyboardType,
     this.suffixIcon,
+    this.errorText,
+    this.onChanged,
   });
 
   @override
@@ -43,6 +47,8 @@ class AuthField extends StatelessWidget {
           keyboardType: keyboardType,
           suffixIcon: suffixIcon,
           pill: true,
+          errorText: errorText,
+          onChanged: onChanged,
         ),
       ],
     );

@@ -63,7 +63,10 @@ class NextOnboardingScreen extends StatelessWidget {
                       ),
 
                       // SKIP BUTTON
-                      Container(
+                      Pressable(
+                        onTap: () => Navigator.pushReplacementNamed(
+                            context, AppRoutes.login),
+                        child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 26,
                           vertical: 14,
@@ -89,6 +92,7 @@ class NextOnboardingScreen extends StatelessWidget {
                             letterSpacing: 0.5,
                           ),
                         ),
+                      ),
                       ),
                     ],
                   ),
@@ -237,7 +241,7 @@ class NextOnboardingScreen extends StatelessWidget {
                           fontSize: 44,
                           height: 1.10,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -305,7 +309,10 @@ class NextOnboardingScreen extends StatelessWidget {
                       const SizedBox(width: 16),
 
                       // PROFILE BUTTON
-                      Container(
+                      Pressable(
+                        onTap: () => Navigator.pushReplacementNamed(
+                            context, AppRoutes.login),
+                        child: Container(
                         width: 66,
                         height: 66,
                         decoration: BoxDecoration(
@@ -320,6 +327,7 @@ class NextOnboardingScreen extends StatelessWidget {
                           color: Colors.white,
                           size: 34,
                         ),
+                      ),
                       ),
                     ],
                   ),
