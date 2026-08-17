@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/routing/app_routes.dart';
@@ -10,11 +11,20 @@ import '../../../shared/widgets/animations/pressable.dart';
 import 'onboarding_screen_2.dart';
 
 class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+  /// When hosted in the swipeable [OnboardingPager], advances to the next page.
+  /// Falls back to a normal route push when shown standalone.
+  final VoidCallback? onNext;
+
+  const OnboardingScreen({super.key, this.onNext});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      // Light background → dark status-bar icons.
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -151,7 +161,7 @@ class OnboardingScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 44,
                         height: 1.10,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: Colors.black,
                       ),
                     ),
@@ -237,13 +247,16 @@ class OnboardingScreen extends StatelessWidget {
                 Expanded(
                   child: Pressable(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                          const NextOnboardingScreen(),
-                        ),
-                      );
+                      if (onNext != null) {
+                        onNext!();
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NextOnboardingScreen(),
+                          ),
+                        );
+                      }
                       },
                     child: Container(
                       height: 66,
@@ -315,6 +328,7 @@ class OnboardingScreen extends StatelessWidget {
           ),
           ),
         ),
+      ),
       ),
     );
   }

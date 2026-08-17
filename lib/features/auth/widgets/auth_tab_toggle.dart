@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Segmented "Log In / Sign Up" control shown at the top of the auth screens.
+/// Segmented "Log In / Sign Up" control shown at the top of the auth screen.
+///
+/// The white selection pill is a single element that physically *slides*
+/// between the two sides (via [AnimatedAlign]) rather than cross-fading in and
+/// out per segment — so switching tabs reads as one continuous movement.
 /// [activeIndex] 0 = Log In, 1 = Sign Up.
 class AuthTabToggle extends StatelessWidget {
   final int activeIndex;
-  final VoidCallback onLogin;
-  final VoidCallback onSignup;
+  final ValueChanged<int> onSelect;
 
   const AuthTabToggle({
     super.key,
     required this.activeIndex,
-    required this.onLogin,
-    required this.onSignup,
+    required this.onSelect,
   });
 
   @override
@@ -25,35 +27,61 @@ class AuthTabToggle extends StatelessWidget {
           colors: [Color(0xFF9C8BF5), Color(0xFF7358E0)],
         ),
       ),
-      child: Row(
+      child: Stack(
         children: [
-          _segment('Log In', activeIndex == 0, onLogin),
-          _segment('Sign Up', activeIndex == 1, onSignup),
+          // Sliding white pill — fills half the width and eases across.
+          Positioned.fill(
+            child: AnimatedAlign(
+              duration: const Duration(milliseconds: 280),
+              curve: Curves.easeOutCubic,
+              alignment:
+                  activeIndex == 0 ? Alignment.centerLeft : Alignment.centerRight,
+              child: FractionallySizedBox(
+                widthFactor: 0.5,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(36),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.10),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              _segment('Log In', 0),
+              _segment('Sign Up', 1),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _segment(String label, bool active, VoidCallback onTap) {
+  Widget _segment(String label, int index) {
+    final active = activeIndex == index;
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () => onSelect(index),
         behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: active ? Colors.white : Colors.transparent,
-            borderRadius: BorderRadius.circular(36),
-          ),
           alignment: Alignment.center,
-          child: Text(
-            label,
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 220),
             style: GoogleFonts.montserrat(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: active ? Colors.black : Colors.white,
             ),
+            child: Text(label),
           ),
         ),
       ),

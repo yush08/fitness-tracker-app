@@ -13,6 +13,9 @@ class StatProgressBar extends StatelessWidget {
   final Color? valueColor;
   final double height;
 
+  /// Fill animation duration. Set to [Duration.zero] to disable.
+  final Duration duration;
+
   const StatProgressBar({
     super.key,
     required this.label,
@@ -21,6 +24,7 @@ class StatProgressBar extends StatelessWidget {
     this.valueText,
     this.valueColor,
     this.height = 8,
+    this.duration = const Duration(milliseconds: 850),
   });
 
   @override
@@ -48,11 +52,16 @@ class StatProgressBar extends StatelessWidget {
         const SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(height),
-          child: LinearProgressIndicator(
-            value: progress.clamp(0.0, 1.0),
-            minHeight: height,
-            backgroundColor: AppColors.surface,
-            valueColor: AlwaysStoppedAnimation(fillColor),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
+            duration: duration,
+            curve: Curves.easeOutCubic,
+            builder: (context, value, _) => LinearProgressIndicator(
+              value: value,
+              minHeight: height,
+              backgroundColor: AppColors.surface,
+              valueColor: AlwaysStoppedAnimation(fillColor),
+            ),
           ),
         ),
       ],

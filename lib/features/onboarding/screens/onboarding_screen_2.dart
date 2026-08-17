@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/routing/app_routes.dart';
@@ -7,11 +8,19 @@ import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/animations/pressable.dart';
 
 class NextOnboardingScreen extends StatelessWidget {
-  const NextOnboardingScreen({super.key});
+  /// When hosted in the swipeable [OnboardingPager], advances to the next page.
+  /// Falls back to a normal route push when shown standalone.
+  final VoidCallback? onNext;
+
+  const NextOnboardingScreen({super.key, this.onNext});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -261,10 +270,13 @@ class NextOnboardingScreen extends StatelessWidget {
                       // CONTINUE BUTTON
                       Expanded(
                         child: Pressable(
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            AppRoutes.onboarding3,
-                          ),
+                          onTap: () {
+                            if (onNext != null) {
+                              onNext!();
+                            } else {
+                              Navigator.pushNamed(context, AppRoutes.onboarding3);
+                            }
+                          },
                           child: Container(
                             height: 66,
                             decoration: BoxDecoration(
@@ -336,6 +348,7 @@ class NextOnboardingScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }

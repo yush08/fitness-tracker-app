@@ -13,19 +13,39 @@ class SegmentedBar extends StatelessWidget {
   final List<BarSegment> segments;
   final double height;
 
-  const SegmentedBar({super.key, required this.segments, this.height = 46});
+  /// Left-to-right reveal duration. Set to [Duration.zero] to disable.
+  final Duration duration;
+
+  const SegmentedBar({
+    super.key,
+    required this.segments,
+    this.height = 46,
+    this.duration = const Duration(milliseconds: 800),
+  });
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(height / 2),
-      child: SizedBox(
-        height: height,
-        child: Row(
-          children: [
-            for (final s in segments)
-              Expanded(flex: s.flex, child: Container(color: s.color)),
-          ],
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: 1),
+        duration: duration,
+        curve: Curves.easeOutCubic,
+        builder: (context, t, child) => ClipRect(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            widthFactor: t,
+            child: child,
+          ),
+        ),
+        child: SizedBox(
+          height: height,
+          child: Row(
+            children: [
+              for (final s in segments)
+                Expanded(flex: s.flex, child: Container(color: s.color)),
+            ],
+          ),
         ),
       ),
     );

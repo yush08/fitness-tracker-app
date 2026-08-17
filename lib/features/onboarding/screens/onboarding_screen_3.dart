@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/routing/app_routes.dart';
@@ -12,7 +13,11 @@ class OnboardingScreen3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -80,7 +85,7 @@ class OnboardingScreen3 extends StatelessWidget {
                         style: GoogleFonts.montserrat(
                           fontSize: 44,
                           height: 1.10,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                           color: Colors.black,
                         ),
                       ),
@@ -93,24 +98,28 @@ class OnboardingScreen3 extends StatelessWidget {
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      // Clock peeks out from behind the card (top-right).
+                      // Oversized clock, centered and cut off at the edges,
+                      // with its lower half tucked behind the top of the card.
                       Positioned(
-                        top: 0,
-                        right: -18,
+                        left: 0,
+                        right: 0,
+                        bottom: -20,
                         child: Floating(
                           amplitude: 10,
                           period: const Duration(seconds: 4),
-                          child: Image.asset(
-                            'assets/images/clock2.png',
-                            width: 200,
-                            fit: BoxFit.contain,
+                          child: Center(
+                            child: Image.asset(
+                              'assets/images/clock2.png',
+                              width: MediaQuery.of(context).size.width * 1.95,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: FadeSlideIn(
-                          delay: const Duration(milliseconds: 300),
+                          delay: const Duration(milliseconds: 100),
                           offset: const Offset(0, 0.25),
                           child: _infoCard(context),
                         ),
@@ -122,6 +131,7 @@ class OnboardingScreen3 extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }

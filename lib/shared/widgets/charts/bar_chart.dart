@@ -15,6 +15,9 @@ class BarChart extends StatelessWidget {
   final Color goalColor;
   final double height;
 
+  /// Grow-in animation duration. Set to [Duration.zero] to disable.
+  final Duration duration;
+
   const BarChart({
     super.key,
     required this.values,
@@ -25,6 +28,7 @@ class BarChart extends StatelessWidget {
     this.goalValue,
     this.goalColor = AppColors.chartRed,
     this.height = 210,
+    this.duration = const Duration(milliseconds: 850),
   });
 
   @override
@@ -32,15 +36,21 @@ class BarChart extends StatelessWidget {
     return SizedBox(
       height: height,
       width: double.infinity,
-      child: CustomPaint(
-        painter: _BarPainter(
-          values: values,
-          xLabels: xLabels,
-          yTicks: yTicks,
-          maxY: maxY,
-          barColor: barColor,
-          goalValue: goalValue,
-          goalColor: goalColor,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: 1),
+        duration: duration,
+        curve: Curves.easeOutCubic,
+        builder: (context, t, _) => CustomPaint(
+          painter: _BarPainter(
+            values: values,
+            xLabels: xLabels,
+            yTicks: yTicks,
+            maxY: maxY,
+            barColor: barColor,
+            goalValue: goalValue,
+            goalColor: goalColor,
+            t: t,
+          ),
         ),
       ),
     );
@@ -56,6 +66,9 @@ class _BarPainter extends CustomPainter {
   final double? goalValue;
   final Color goalColor;
 
+  /// Grow progress 0..1 — bar heights scale up from the baseline.
+  final double t;
+
   static const double _left = 40;
   static const double _right = 10;
   static const double _top = 12;
@@ -69,6 +82,7 @@ class _BarPainter extends CustomPainter {
     required this.barColor,
     required this.goalValue,
     required this.goalColor,
+    this.t = 1,
   });
 
   @override
@@ -92,7 +106,9 @@ class _BarPainter extends CustomPainter {
     final barW = slot * 0.5;
     for (int i = 0; i < n; i++) {
       final cx = plot.left + slot * (i + 0.5);
-      final top = toY(values[i]);
+      final fullTop = toY(values[i]);
+      // Grow the bar up from the baseline as t goes 0 -> 1.
+      final top = plot.bottom - (plot.bottom - fullTop) * t;
       final barRect =
           Rect.fromLTRB(cx - barW / 2, top, cx + barW / 2, plot.bottom);
       final rrect = RRect.fromRectAndCorners(
@@ -143,5 +159,5 @@ class _BarPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_BarPainter old) => old.values != values;
+  bool shouldRepaint(_BarPainter old) => old.values != values || old.t != t;
 }

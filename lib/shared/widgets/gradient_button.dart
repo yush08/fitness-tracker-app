@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/text_styles.dart';
@@ -33,7 +34,10 @@ class GradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final fg = foreground ?? (gradient != null ? Colors.white : AppColors.onAccent);
     return Pressable(
-      onTap: onPressed,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onPressed();
+      },
       child: Container(
         height: height,
         width: double.infinity,

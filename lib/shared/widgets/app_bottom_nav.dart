@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/text_styles.dart';
+import 'animations/pressable.dart';
+
+/// Muted grey for inactive nav icons/labels (kept dark-pill readable in both
+/// themes, so it isn't a theme-aware token).
+const Color _inactive = Color(0xFF8A8C96);
 
 /// Tab identifiers for the dashboard bottom navigation.
 /// The int value doubles as the [IndexedStack] index in [MainShell].
@@ -87,33 +93,45 @@ class _NavButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(22),
+    // Pressable (squish) matches the tactile feedback used everywhere else in
+    // the app, instead of the Material ripple this used to have.
+    return Pressable(
+      scale: 0.9,
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 44,
-            height: 34,
-            decoration: BoxDecoration(
-              color: selected ? AppColors.accent : Colors.transparent,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Icon(
-              item.icon,
-              size: 22,
-              color: selected ? AppColors.onAccent : const Color(0xFF8A8C96),
+          // The active pill scales up a touch as it lights up — a small "pop".
+          AnimatedScale(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOutBack,
+            scale: selected ? 1.0 : 0.9,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 44,
+              height: 34,
+              decoration: BoxDecoration(
+                color: selected ? AppColors.accent : Colors.transparent,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Icon(
+                item.icon,
+                size: 22,
+                color: selected ? AppColors.onAccent : _inactive,
+              ),
             ),
           ),
           const SizedBox(height: 3),
-          Text(
-            item.label,
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 200),
             style: AppTextStyles.navLabel.copyWith(
-              color: selected ? AppColors.accent : const Color(0xFF8A8C96),
+              color: selected ? AppColors.accent : _inactive,
               fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
             ),
+            child: Text(item.label),
           ),
         ],
       ),

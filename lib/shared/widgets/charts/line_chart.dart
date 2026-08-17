@@ -18,6 +18,9 @@ class LineChart extends StatelessWidget {
   final String? tooltipValue;
   final double height;
 
+  /// Line-draw animation duration. Set to [Duration.zero] to disable.
+  final Duration duration;
+
   const LineChart({
     super.key,
     required this.values,
@@ -31,6 +34,7 @@ class LineChart extends StatelessWidget {
     this.tooltipTitle,
     this.tooltipValue,
     this.height = 190,
+    this.duration = const Duration(milliseconds: 1000),
   });
 
   @override
@@ -38,18 +42,24 @@ class LineChart extends StatelessWidget {
     return SizedBox(
       height: height,
       width: double.infinity,
-      child: CustomPaint(
-        painter: _LinePainter(
-          values: values,
-          xLabels: xLabels,
-          yTicks: yTicks,
-          minY: minY,
-          maxY: maxY,
-          lineColor: lineColor,
-          showDots: showDots,
-          highlightIndex: highlightIndex,
-          tooltipTitle: tooltipTitle,
-          tooltipValue: tooltipValue,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: 1),
+        duration: duration,
+        curve: Curves.easeInOutCubic,
+        builder: (context, t, _) => CustomPaint(
+          painter: _LinePainter(
+            values: values,
+            xLabels: xLabels,
+            yTicks: yTicks,
+            minY: minY,
+            maxY: maxY,
+            lineColor: lineColor,
+            showDots: showDots,
+            highlightIndex: highlightIndex,
+            tooltipTitle: tooltipTitle,
+            tooltipValue: tooltipValue,
+            t: t,
+          ),
         ),
       ),
     );
@@ -68,6 +78,9 @@ class _LinePainter extends CustomPainter {
   final String? tooltipTitle;
   final String? tooltipValue;
 
+  /// Draw progress 0..1 — the line traces out and dots/tooltip fade in at the end.
+  final double t;
+
   static const double _left = 36;
   static const double _right = 10;
   static const double _top = 12;
@@ -84,6 +97,7 @@ class _LinePainter extends CustomPainter {
     this.highlightIndex,
     this.tooltipTitle,
     this.tooltipValue,
+    this.t = 1,
   });
 
   @override
@@ -127,8 +141,10 @@ class _LinePainter extends CustomPainter {
     ];
     final path = _smoothPath(pts);
 
+    // Trace the line out: extract just the first `t` fraction of its length.
+    final drawPath = t >= 1 ? path : _trim(path, t);
     canvas.drawPath(
-      path,
+      drawPath,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3
@@ -137,8 +153,12 @@ class _LinePainter extends CustomPainter {
         ..color = lineColor,
     );
 
+    // Overlays (dots, highlight, tooltip) fade in once the trace is nearly done.
+    final overlay = ((t - 0.7) / 0.3).clamp(0.0, 1.0);
+    if (overlay <= 0) return;
+
     if (showDots) {
-      final dot = Paint()..color = lineColor;
+      final dot = Paint()..color = lineColor.withOpacity(overlay);
       for (final p in pts) {
         canvas.drawCircle(p, 3.2, dot);
       }
@@ -161,6 +181,18 @@ class _LinePainter extends CustomPainter {
         _tooltip(canvas, p, plot);
       }
     }
+  }
+
+  /// Returns the first [fraction] (0..1) of [path] by arc length.
+  Path _trim(Path path, double fraction) {
+    final out = Path();
+    for (final metric in path.computeMetrics()) {
+      out.addPath(
+        metric.extractPath(0, metric.length * fraction.clamp(0.0, 1.0)),
+        Offset.zero,
+      );
+    }
+    return out;
   }
 
   Path _smoothPath(List<Offset> pts) {
@@ -240,7 +272,9 @@ class _LinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_LinePainter old) =>
-      old.values != values || old.highlightIndex != highlightIndex;
+      old.values != values ||
+      old.highlightIndex != highlightIndex ||
+      old.t != t;
 }
 
 enum _Align { center, right }

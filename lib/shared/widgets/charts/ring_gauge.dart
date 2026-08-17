@@ -6,6 +6,10 @@ import '../../../core/theme/app_colors.dart';
 
 /// Circular progress ring with arbitrary center content.
 /// Used by the Daily Summary tiles and the Achievement badges.
+///
+/// The arc sweeps up from 0 to [progress] on first build (and re-animates from
+/// its current value whenever [progress] changes), so gauges feel like they
+/// "fill" rather than snapping into place.
 class RingGauge extends StatelessWidget {
   final double progress; // 0.0 - 1.0
   final double size;
@@ -13,6 +17,9 @@ class RingGauge extends StatelessWidget {
   final Color color;
   final Color? trackColor;
   final Widget? center;
+
+  /// Sweep animation duration. Set to [Duration.zero] to disable.
+  final Duration duration;
 
   const RingGauge({
     super.key,
@@ -22,6 +29,7 @@ class RingGauge extends StatelessWidget {
     this.color = AppColors.chartRed,
     this.trackColor,
     this.center,
+    this.duration = const Duration(milliseconds: 900),
   });
 
   @override
@@ -29,12 +37,18 @@ class RingGauge extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(
-        painter: _RingPainter(
-          progress: progress.clamp(0.0, 1.0),
-          strokeWidth: strokeWidth,
-          color: color,
-          trackColor: trackColor ?? AppColors.surface,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
+        duration: duration,
+        curve: Curves.easeOutCubic,
+        builder: (context, value, child) => CustomPaint(
+          painter: _RingPainter(
+            progress: value,
+            strokeWidth: strokeWidth,
+            color: color,
+            trackColor: trackColor ?? AppColors.surface,
+          ),
+          child: child,
         ),
         child: Center(child: center),
       ),

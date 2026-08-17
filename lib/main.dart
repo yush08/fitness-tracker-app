@@ -5,7 +5,7 @@ import 'core/routing/app_routes.dart';
 import 'core/theme/app_colors.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
-import 'features/onboarding/screens/onboarding_screen.dart';
+import 'features/onboarding/screens/onboarding_pager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           themeMode: mode,
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
-          home: const OnboardingScreen(),
+          home: const OnboardingPager(),
           onGenerateRoute: AppRoutes.onGenerateRoute,
         );
       },

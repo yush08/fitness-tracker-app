@@ -2,6 +2,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_controller.dart';
@@ -49,22 +50,83 @@ class _MainShellState extends State<MainShell> {
           ProfileScreen(),
           SettingsScreen(),
         ];
-        return PopScope(
-          // On a non-Home tab, system-back returns to Home instead of exiting.
-          canPop: index == 0,
-          onPopInvokedWithResult: (didPop, _) {
-            if (!didPop && index != 0) ShellController.go(0);
-          },
-          child: Scaffold(
-            backgroundColor: AppColors.background,
-            body: IndexedStack(index: index, children: tabs),
-            bottomNavigationBar: AppBottomNav(
-              currentIndex: index,
-              onTap: ShellController.go,
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          // Status-bar icons follow the dashboard theme (light on dark, etc.).
+          value: (AppColors.isDark
+                  ? SystemUiOverlayStyle.light
+                  : SystemUiOverlayStyle.dark)
+              .copyWith(statusBarColor: Colors.transparent),
+          child: PopScope(
+            // On a non-Home tab, system-back returns to Home instead of exiting.
+            canPop: index == 0,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop && index != 0) ShellController.go(0);
+            },
+            child: Scaffold(
+              backgroundColor: AppColors.background,
+              body: _TabSwitcher(index: index, children: tabs),
+              bottomNavigationBar: AppBottomNav(
+                currentIndex: index,
+                onTap: ShellController.go,
+              ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+/// Hosts the tabs in an [IndexedStack] (so each tab keeps its scroll position
+/// and state) while fading + easing the incoming tab in whenever the index
+/// changes — so switching tabs matches the motion used elsewhere in the app
+/// instead of a hard cut.
+class _TabSwitcher extends StatefulWidget {
+  final int index;
+  final List<Widget> children;
+
+  const _TabSwitcher({required this.index, required this.children});
+
+  @override
+  State<_TabSwitcher> createState() => _TabSwitcherState();
+}
+
+class _TabSwitcherState extends State<_TabSwitcher>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 260),
+    value: 1,
+  );
+  late final Animation<double> _fade =
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+  late final Animation<Offset> _slide = Tween<Offset>(
+    begin: const Offset(0, 0.02),
+    end: Offset.zero,
+  ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+  @override
+  void didUpdateWidget(_TabSwitcher old) {
+    super.didUpdateWidget(old);
+    if (old.index != widget.index) {
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(
+        position: _slide,
+        child: IndexedStack(index: widget.index, children: widget.children),
+      ),
     );
   }
 }
