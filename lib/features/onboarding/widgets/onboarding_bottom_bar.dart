@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_gradients.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animations/pressable.dart';
+import '../../../shared/widgets/clay.dart';
 
 /// Shared bottom action row for the onboarding flow:
 /// a gradient "continue" pill plus a circular profile button.
@@ -29,40 +30,32 @@ class OnboardingBottomBar extends StatelessWidget {
               onTap: onContinue,
               child: Container(
                 height: 66,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.5),
-                    width: 1,
-                  ),
-                  gradient: AppGradients.primaryButtonGradient,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF7B67EC).withOpacity(0.45),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                decoration: Clay.decoration(AppColors.accent, radius: 36),
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Flexible(
-                      child: Text(
-                        label,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                    const ClayGloss(radius: 36),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            label,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    const Icon(
-                      Icons.keyboard_double_arrow_right,
-                      color: Colors.white,
-                      size: 28,
+                        const SizedBox(width: 16),
+                        const Icon(
+                          Icons.keyboard_double_arrow_right,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -77,8 +70,28 @@ class OnboardingBottomBar extends StatelessWidget {
               height: 66,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withOpacity(0.38),
+                    Colors.white.withOpacity(0.18),
+                  ],
+                ),
                 border: Border.all(color: Colors.white.withOpacity(0.55)),
-                color: Colors.white.withOpacity(0.20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.18),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.25),
+                    blurRadius: 10,
+                    spreadRadius: -4,
+                    offset: const Offset(-5, -5),
+                  ),
+                ],
               ),
               child: const Icon(Icons.person, color: Colors.white, size: 34),
             ),

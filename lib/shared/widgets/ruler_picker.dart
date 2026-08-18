@@ -35,7 +35,23 @@ class _RulerPickerState extends State<RulerPicker> {
   @override
   void initState() {
     super.initState();
-    _value = widget.initialValue.toDouble();
+    _value = widget.initialValue
+        .toDouble()
+        .clamp(widget.min.toDouble(), widget.max.toDouble());
+  }
+
+  @override
+  void didUpdateWidget(RulerPicker old) {
+    super.didUpdateWidget(old);
+    // React to the parent swapping the value or range (e.g. a unit change),
+    // otherwise the ruler keeps showing the pre-conversion number.
+    if (old.initialValue != widget.initialValue ||
+        old.min != widget.min ||
+        old.max != widget.max) {
+      _value = widget.initialValue
+          .toDouble()
+          .clamp(widget.min.toDouble(), widget.max.toDouble());
+    }
   }
 
   void _onDrag(DragUpdateDetails d) {
