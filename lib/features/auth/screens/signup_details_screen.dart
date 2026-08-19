@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../services/auth_service.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/custom_textfield.dart';
 import '../../../shared/widgets/dropdown_chip.dart';
@@ -156,8 +157,15 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
               GradientButton(
                 label: 'Next',
                 color: AppColors.accent,
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context, AppRoutes.main, (r) => false),
+                onPressed: () async {
+                  // Persist the name onto the freshly-created Firebase account.
+                  // Non-blocking: navigation proceeds regardless of the result.
+                  await AuthService.instance.updateDisplayName(_name.text);
+                  if (context.mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, AppRoutes.main, (r) => false);
+                  }
+                },
                 trailingIcon: const Icon(Icons.chevron_right,
                     color: Colors.white, size: 24),
               ),

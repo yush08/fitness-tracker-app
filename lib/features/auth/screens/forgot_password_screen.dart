@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/gradient_button.dart';
+import '../services/auth_service.dart';
 import '../widgets/auth_field.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _email = TextEditingController();
+  bool _busy = false;
   String? _emailError;
 
   static final _emailRegex = RegExp(r'^[\w.\-]+@([\w\-]+\.)+[\w\-]{2,}$');
@@ -25,18 +27,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  void _sendLink() {
+  Future<void> _sendLink() async {
     final email = _email.text.trim();
     setState(() {
       _emailError = email.isEmpty
           ? 'Email is required'
           : (!_emailRegex.hasMatch(email) ? 'Enter a valid email' : null);
     });
-    if (_emailError != null) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Reset link sent')),
-    );
-    Navigator.pop(context);
+    if (_emailError != null || _busy) return;
+
+    setState(() => _busy = true);
+    try {
+      await AuthService.instance.sendPasswordReset(email);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Reset link sent')),
+      );
+      Navigator.pop(context);
+    } on AuthFailure catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   @override

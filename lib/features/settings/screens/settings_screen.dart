@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/theme/theme_controller.dart';
+import '../../auth/services/auth_service.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/dark_card.dart';
@@ -99,10 +100,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 18),
+
+          DarkCard(
+            child: InkWell(
+              onTap: _signOut,
+              child: Row(
+                children: [
+                  const Icon(Icons.logout, size: 20, color: Color(0xFFE5484D)),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Sign Out',
+                    style: AppTextStyles.small.copyWith(
+                      color: const Color(0xFFE5484D),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
         ),
       ),
     );
+  }
+
+  Future<void> _signOut() async {
+    await AuthService.instance.signOut();
+    if (!mounted) return;
+    // Drop any pushed routes so we land back on the AuthGate, which now shows
+    // onboarding/login again in response to the cleared session.
+    Navigator.of(context).popUntil((r) => r.isFirst);
   }
 
   Widget _unitRow(String label, String value, List<String> options,

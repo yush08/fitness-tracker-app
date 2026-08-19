@@ -6,6 +6,7 @@ import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_gradients.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/gradient_button.dart';
+import '../services/auth_service.dart';
 import '../widgets/auth_check_row.dart';
 import '../widgets/auth_field.dart';
 import '../widgets/auth_tab_toggle.dart';
@@ -35,6 +36,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _password = TextEditingController();
   bool _rememberMe = false;
   bool _showPassword = false;
+  bool _busy = false;
   String? _emailError;
   String? _passwordError;
 
@@ -77,12 +79,61 @@ class _AuthScreenState extends State<AuthScreen> {
   void _goHome() =>
       Navigator.pushNamedAndRemoveUntil(context, AppRoutes.main, (r) => false);
 
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /// Runs [action] with the busy flag set so the form locks and the loading
+  /// overlay shows, surfacing any [AuthFailure] as a snackbar.
+  Future<void> _run(Future<void> Function() action) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await action();
+    } on AuthFailure catch (e) {
+      _showError(e.message);
+    } catch (_) {
+      _showError('Something went wrong. Please try again.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   void _signIn() {
-    if (_validate()) _goHome();
+    if (!_validate()) return;
+    _run(() async {
+      await AuthService.instance
+          .signInWithEmail(_email.text, _password.text);
+      // The AuthGate reacts to the session too, but pushing here gives an
+      // immediate transition instead of waiting for the stream tick.
+      if (mounted) _goHome();
+    });
   }
 
   void _signUp() {
-    if (_validate()) Navigator.pushNamed(context, AppRoutes.signupDetails);
+    if (!_validate()) return;
+    _run(() async {
+      await AuthService.instance
+          .signUpWithEmail(_email.text, _password.text);
+      if (mounted) Navigator.pushNamed(context, AppRoutes.signupDetails);
+    });
+  }
+
+  void _googleSignIn() {
+    _run(() async {
+      final user = await AuthService.instance.signInWithGoogle();
+      if (user != null && mounted) _goHome();
+    });
+  }
+
+  void _appleSignIn() {
+    // Sign in with Apple needs an Apple Developer account and platform
+    // entitlements that aren't wired up yet; surface that instead of a
+    // silent no-op.
+    _showError('Apple sign-in isn\'t set up yet.');
   }
 
   @override
@@ -93,7 +144,9 @@ class _AuthScreenState extends State<AuthScreen> {
         statusBarColor: Colors.transparent,
       ),
       child: Scaffold(
-      body: Container(
+      body: Stack(
+        children: [
+          Container(
         width: double.infinity,
         height: double.infinity,
         decoration:
@@ -156,6 +209,18 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
       ),
+          // Locks the form and shows a spinner while an auth call is in flight.
+          if (_busy)
+            const Positioned.fill(
+              child: ColoredBox(
+                color: Color(0x88000000),
+                child: Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              ),
+            ),
+        ],
+      ),
       ),
     );
   }
@@ -202,7 +267,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 26),
         _dividerLabel('or login with'),
         const SizedBox(height: 22),
-        _socialRow(onGoogle: _goHome, onApple: _goHome),
+        _socialRow(onGoogle: _googleSignIn, onApple: _appleSignIn),
       ],
     );
   }
@@ -230,12 +295,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 26),
         _dividerLabel('or sign up with'),
         const SizedBox(height: 22),
-        _socialRow(
-          onGoogle: () =>
-              Navigator.pushNamed(context, AppRoutes.signupDetails),
-          onApple: () =>
-              Navigator.pushNamed(context, AppRoutes.signupDetails),
-        ),
+        _socialRow(onGoogle: _googleSignIn, onApple: _appleSignIn),
       ],
     );
   }
