@@ -163,8 +163,17 @@ cd gofit
 
 flutter pub get
 
+# Generate your Firebase config (git-ignored — not committed).
+# Install once: dart pub global activate flutterfire_cli
+flutterfire configure
+
 flutter run
 ```
+
+> **Firebase config is not in the repo.** `lib/firebase_options.dart` and
+> `android/app/google-services.json` embed API keys, so they are git-ignored.
+> Run `flutterfire configure` (above) to generate them for your own Firebase
+> project. See `lib/firebase_options.dart.example` for the expected shape.
 
 ---
 

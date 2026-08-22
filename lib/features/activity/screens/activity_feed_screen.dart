@@ -5,8 +5,11 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/animations/pressable.dart';
+import '../../../shared/utils/app_share.dart';
 import '../../../shared/widgets/app_logo.dart';
-import '../data/sample_activities.dart';
+import '../../../shared/widgets/async_view.dart';
+import '../models/activity_post.dart';
+import '../services/activity_repository.dart';
 import '../widgets/activity_feed_card.dart';
 
 class ActivityFeedScreen extends StatelessWidget {
@@ -40,17 +43,32 @@ class ActivityFeedScreen extends StatelessWidget {
               _pillButton(
                 'Share',
                 Icons.ios_share,
-                () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Activity shared to your feed')),
+                () => AppShare.text(
+                  context,
+                  'Follow my fitness progress on GoFit! 💪',
+                  subject: 'GoFit',
                 ),
               ),
             ],
           ),
           const SizedBox(height: 18),
-          for (final post in SampleActivities.posts) ...[
-            ActivityFeedCard(post: post),
-            const SizedBox(height: 18),
-          ],
+          AsyncView<List<ActivityPost>>(
+            stream: ActivityRepository.instance.feed(),
+            isEmpty: (posts) => posts.isEmpty,
+            empty: const EmptyState(
+              icon: Icons.directions_run_rounded,
+              text: 'No activities yet.\nTap "Start Activity" to log your first.',
+            ),
+            builder: (posts) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final post in posts) ...[
+                  ActivityFeedCard(key: ValueKey(post.id), post: post),
+                  const SizedBox(height: 18),
+                ],
+              ],
+            ),
+          ),
         ],
         ),
       ),

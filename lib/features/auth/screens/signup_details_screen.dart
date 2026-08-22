@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/text_styles.dart';
+import '../../profile/services/user_repository.dart';
 import '../services/auth_service.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/custom_textfield.dart';
@@ -87,6 +89,31 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
     super.dispose();
   }
 
+  double _toCm(int v, String unit) => unit == 'in' ? v * _cmPerInch : v.toDouble();
+  double _toKg(int v, String unit) => unit == 'lb' ? v / _lbPerKg : v.toDouble();
+
+  /// Writes the entered details onto the Firebase account (display name) and
+  /// the Firestore profile document, then drops the user into the app. Wrapped
+  /// so a write failure (e.g. offline) never traps them on this screen.
+  Future<void> _finish() async {
+    try {
+      await AuthService.instance.updateDisplayName(_name.text);
+      await UserRepository.instance.updateProfile(
+        displayName: _name.text.trim().isEmpty ? null : _name.text.trim(),
+        age: int.tryParse(_age.text.trim()),
+        heightCm: _toCm(_height, _heightUnit),
+        weightKg: _toKg(_weight, _weightUnit),
+        targetWeightKg: _toKg(_targetWeight, _targetUnit),
+      );
+    } catch (_) {
+      // Non-fatal: the profile can be completed later from the Profile tab.
+    }
+    if (mounted) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, AppRoutes.main, (r) => false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,6 +157,14 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
                 max: _heightMax,
                 value: _height,
                 onChanged: (v) => _height = v,
+                onEdit: () => _editValue(
+                  title: 'Height',
+                  unit: _heightUnit,
+                  min: _heightMin,
+                  max: _heightMax,
+                  current: _height,
+                  onSet: (v) => setState(() => _height = v),
+                ),
               ),
               const SizedBox(height: 20),
               _rulerSection(
@@ -141,6 +176,14 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
                 max: _weightMax(_weightUnit),
                 value: _weight,
                 onChanged: (v) => _weight = v,
+                onEdit: () => _editValue(
+                  title: 'Weight',
+                  unit: _weightUnit,
+                  min: _weightMin(_weightUnit),
+                  max: _weightMax(_weightUnit),
+                  current: _weight,
+                  onSet: (v) => setState(() => _weight = v),
+                ),
               ),
               const SizedBox(height: 20),
               _rulerSection(
@@ -152,20 +195,20 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
                 max: _weightMax(_targetUnit),
                 value: _targetWeight,
                 onChanged: (v) => _targetWeight = v,
+                onEdit: () => _editValue(
+                  title: 'Target Weight',
+                  unit: _targetUnit,
+                  min: _weightMin(_targetUnit),
+                  max: _weightMax(_targetUnit),
+                  current: _targetWeight,
+                  onSet: (v) => setState(() => _targetWeight = v),
+                ),
               ),
               const SizedBox(height: 32),
               GradientButton(
                 label: 'Next',
                 color: AppColors.accent,
-                onPressed: () async {
-                  // Persist the name onto the freshly-created Firebase account.
-                  // Non-blocking: navigation proceeds regardless of the result.
-                  await AuthService.instance.updateDisplayName(_name.text);
-                  if (context.mounted) {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, AppRoutes.main, (r) => false);
-                  }
-                },
+                onPressed: _finish,
                 trailingIcon: const Icon(Icons.chevron_right,
                     color: Colors.white, size: 24),
               ),
@@ -198,6 +241,7 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
     required int max,
     required int value,
     required ValueChanged<int> onChanged,
+    required VoidCallback onEdit,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,14 +257,130 @@ class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
                 color: Colors.white,
               ),
             ),
-            DropdownChip(value: unit, options: units, onSelected: onUnit),
+            Row(
+              children: [
+                // Manual entry — type an exact value instead of dragging.
+                IconButton(
+                  onPressed: onEdit,
+                  visualDensity: VisualDensity.compact,
+                  tooltip: 'Enter manually',
+                  icon: const Icon(Icons.keyboard_alt_outlined,
+                      color: Colors.white70, size: 22),
+                ),
+                const SizedBox(width: 4),
+                DropdownChip(value: unit, options: units, onSelected: onUnit),
+              ],
+            ),
           ],
         ),
         RulerPicker(
+          // Keyed on the value/unit so a manual edit or unit switch re-seeds
+          // the ruler to the new number instead of keeping the dragged one.
+          key: ValueKey('$title-$value-$unit'),
           min: min,
           max: max,
           initialValue: value,
           onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+  /// Opens a small dialog to type an exact value, clamped to [min]..[max].
+  Future<void> _editValue({
+    required String title,
+    required String unit,
+    required int min,
+    required int max,
+    required int current,
+    required ValueChanged<int> onSet,
+  }) async {
+    final result = await showDialog<int>(
+      context: context,
+      builder: (_) => _NumberEntryDialog(
+        title: title,
+        unit: unit,
+        min: min,
+        max: max,
+        current: current,
+      ),
+    );
+    if (result != null) onSet(result);
+  }
+}
+
+/// Number-entry dialog for the ruler sections. Owns its own controller so it
+/// is disposed only after the dialog is fully gone.
+class _NumberEntryDialog extends StatefulWidget {
+  final String title;
+  final String unit;
+  final int min;
+  final int max;
+  final int current;
+
+  const _NumberEntryDialog({
+    required this.title,
+    required this.unit,
+    required this.min,
+    required this.max,
+    required this.current,
+  });
+
+  @override
+  State<_NumberEntryDialog> createState() => _NumberEntryDialogState();
+}
+
+class _NumberEntryDialogState extends State<_NumberEntryDialog> {
+  late final TextEditingController _controller =
+      TextEditingController(text: '${widget.current}');
+  String? _error;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final parsed = int.tryParse(_controller.text.trim());
+    if (parsed == null) {
+      setState(() => _error = 'Enter a number');
+      return;
+    }
+    if (parsed < widget.min || parsed > widget.max) {
+      setState(() => _error = 'Must be ${widget.min}–${widget.max} ${widget.unit}');
+      return;
+    }
+    Navigator.pop(context, parsed);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.cardBackground,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text('${widget.title} (${widget.unit})',
+          style: AppTextStyles.cardTitle),
+      content: CustomTextField(
+        hint: '${widget.min}–${widget.max}',
+        controller: _controller,
+        dark: true,
+        keyboardType: TextInputType.number,
+        errorText: _error,
+      ),
+      actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('Cancel',
+              style:
+                  AppTextStyles.small.copyWith(color: AppColors.textSecondary)),
+        ),
+        TextButton(
+          onPressed: _submit,
+          child: Text('Set',
+              style: AppTextStyles.small.copyWith(
+                  color: AppColors.accentText, fontWeight: FontWeight.w700)),
         ),
       ],
     );

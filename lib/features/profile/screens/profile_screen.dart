@@ -5,8 +5,15 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/app_logo.dart';
+import '../../../shared/widgets/async_view.dart';
 import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/stat_progress_bar.dart';
+import '../../../shared/widgets/user_avatar.dart';
+import '../../activity/services/activity_repository.dart';
+import '../../nutrition/models/meal.dart';
+import '../../nutrition/services/meal_repository.dart';
+import '../models/user_profile.dart';
+import '../services/user_repository.dart';
 import '../widgets/profile_menu_item.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -23,41 +30,69 @@ class ProfileScreen extends StatelessWidget {
         children: [
           const AppLogo(),
           const SizedBox(height: 20),
-          Center(
-            child: CircleAvatar(
-              radius: 44,
-              backgroundColor: AppColors.cardBackground,
-              child:
-                  Icon(Icons.person, size: 46, color: AppColors.textSecondary),
-            ),
-          ),
-          const SizedBox(height: 14),
-          Center(
-            child: Text('Kumar Ayush', style: AppTextStyles.screenTitle),
-          ),
-          const SizedBox(height: 20),
-
-          DarkCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Personal Goals', style: AppTextStyles.cardTitle),
-                const SizedBox(height: 16),
-                StatProgressBar(
-                  label: 'Daily Steps',
-                  valueText: '10,000',
-                  progress: 0.7,
-                  fillColor: AppColors.accentBlue,
-                ),
-                const SizedBox(height: 16),
-                StatProgressBar(
-                  label: 'Sleep Hours',
-                  valueText: '8h',
-                  progress: 0.8,
-                  fillColor: AppColors.chartRed,
-                ),
-              ],
-            ),
+          AsyncView<UserProfile>(
+            stream: UserRepository.instance.watchProfile(),
+            builder: (profile) {
+              final name = profile.displayName.trim().isEmpty
+                  ? 'Athlete'
+                  : profile.displayName.trim();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: UserAvatar(
+                      name: profile.displayName,
+                      photoUrl: profile.photoUrl,
+                      radius: 44,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Center(
+                    child: Text(name, style: AppTextStyles.screenTitle),
+                  ),
+                  const SizedBox(height: 20),
+                  // Real progress toward today's goals, from logged data.
+                  AsyncView<ActivitySummary>(
+                    stream: ActivityRepository.instance.summary(),
+                    builder: (summary) => AsyncView<List<Meal>>(
+                      stream: MealRepository.instance.todaysMeals(),
+                      builder: (meals) {
+                        final consumed =
+                            meals.fold<int>(0, (s, m) => s + m.calories);
+                        final calGoal = profile.goals.dailyCalories;
+                        return DarkCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Today's Progress",
+                                  style: AppTextStyles.cardTitle),
+                              const SizedBox(height: 16),
+                              StatProgressBar(
+                                label: 'Calories',
+                                valueText: '$consumed / $calGoal',
+                                progress: calGoal == 0
+                                    ? 0
+                                    : (consumed / calGoal).clamp(0.0, 1.0),
+                                fillColor: AppColors.accentBlue,
+                              ),
+                              const SizedBox(height: 16),
+                              StatProgressBar(
+                                label: 'Distance',
+                                valueText:
+                                    '${summary.todayKm.toStringAsFixed(1)} km',
+                                progress:
+                                    (summary.todayKm / 10).clamp(0.0, 1.0),
+                                fillColor: AppColors.chartRed,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 20),
 

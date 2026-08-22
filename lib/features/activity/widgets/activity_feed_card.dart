@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../shared/utils/app_share.dart';
 import '../../../shared/widgets/dark_card.dart';
+import '../../../shared/widgets/user_avatar.dart';
 import '../models/activity_post.dart';
 import 'route_map_preview.dart';
 
@@ -23,6 +25,16 @@ class _ActivityFeedCardState extends State<ActivityFeedCard> {
   void _toast(String message) => ScaffoldMessenger.of(context)
       .showSnackBar(SnackBar(content: Text(message)));
 
+  void _share() {
+    final p = widget.post;
+    AppShare.text(
+      context,
+      "I just completed ${p.title} on GoFit — "
+      "${p.distance} in ${p.duration} (${p.pace}). 🏃",
+      subject: 'My GoFit activity',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final post = widget.post;
@@ -34,11 +46,7 @@ class _ActivityFeedCardState extends State<ActivityFeedCard> {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.surface,
-                child: Icon(Icons.person, color: AppColors.textSecondary),
-              ),
+              UserAvatar(name: post.user, radius: 20),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +107,7 @@ class _ActivityFeedCardState extends State<ActivityFeedCard> {
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () => _toast('Shared'),
+                onTap: _share,
                 child: Icon(Icons.share_outlined,
                     color: AppColors.textSecondary, size: 20),
               ),

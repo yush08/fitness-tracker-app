@@ -6,6 +6,8 @@ import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/custom_textfield.dart';
 import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/gradient_button.dart';
+import '../../../shared/widgets/user_avatar.dart';
+import '../services/user_repository.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
   const PersonalDetailsScreen({super.key});
@@ -15,14 +17,71 @@ class PersonalDetailsScreen extends StatefulWidget {
 }
 
 class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
-  // Editable field values (session state — matches the app's UI-only model).
+  // Editable field values, loaded from Firestore in [initState] and written
+  // back on Save.
   final Map<String, String> _values = {
-    'Full Name': 'Kumar Ayush',
-    'Email': 'ayush@example.com',
-    'Age': '20',
-    'Height': '160 cm',
-    'Weight': '66 kg',
+    'Full Name': '',
+    'Email': '',
+    'Age': '',
+    'Height': '',
+    'Weight': '',
   };
+  bool _saving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final p = await UserRepository.instance.getProfile();
+      if (!mounted) return;
+      setState(() {
+        _values['Full Name'] = p.displayName;
+        _values['Email'] = p.email;
+        _values['Age'] = p.age?.toString() ?? '';
+        _values['Height'] =
+            p.heightCm == null ? '' : '${p.heightCm!.round()} cm';
+        _values['Weight'] =
+            p.weightKg == null ? '' : '${p.weightKg!.round()} kg';
+      });
+    } catch (_) {
+      // Leave fields blank on a read failure; the user can still enter values.
+    }
+  }
+
+  /// Pulls the leading number out of a value like "160 cm" or "66 kg".
+  double? _numeric(String? raw) {
+    if (raw == null) return null;
+    final match = RegExp(r'[\d.]+').firstMatch(raw);
+    return match == null ? null : double.tryParse(match.group(0)!);
+  }
+
+  Future<void> _save() async {
+    if (_saving) return;
+    setState(() => _saving = true);
+    try {
+      await UserRepository.instance.updateProfile(
+        displayName: _values['Full Name']?.trim(),
+        age: int.tryParse(_values['Age']?.trim() ?? ''),
+        heightCm: _numeric(_values['Height']),
+        weightKg: _numeric(_values['Weight']),
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated')),
+      );
+      Navigator.pop(context);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not save. Check your connection.')),
+      );
+    }
+  }
 
   Future<void> _editField(String label) async {
     final keyboard = (label == 'Age')
@@ -102,14 +161,9 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                   ],
                   const SizedBox(height: 4),
                   GradientButton(
-                    label: 'Save Changes',
+                    label: _saving ? 'Saving…' : 'Save Changes',
                     color: AppColors.accent,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Profile updated')),
-                      );
-                      Navigator.pop(context);
-                    },
+                    onPressed: _save,
                   ),
                 ],
               ),
@@ -130,12 +184,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
         height: 92,
         child: Stack(
           children: [
-            CircleAvatar(
-              radius: 46,
-              backgroundColor: AppColors.surface,
-              child:
-                  Icon(Icons.person, size: 46, color: AppColors.textSecondary),
-            ),
+            UserAvatar(name: _values['Full Name'], radius: 46),
             Positioned(
               right: 0,
               bottom: 6,

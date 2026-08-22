@@ -7,6 +7,7 @@ import '../../../shared/widgets/custom_textfield.dart';
 import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/gradient_button.dart';
 import '../../../shared/widgets/labeled_switch_row.dart';
+import '../services/activity_repository.dart';
 import '../widgets/activity_type_tile.dart';
 
 class StartActivityScreen extends StatefulWidget {
@@ -18,9 +19,12 @@ class StartActivityScreen extends StatefulWidget {
 
 class _StartActivityScreenState extends State<StartActivityScreen> {
   final _name = TextEditingController();
+  final _distance = TextEditingController();
+  final _duration = TextEditingController();
   int _selectedType = 1; // Running
   bool _trackRoute = true;
   bool _heartRate = false;
+  bool _saving = false;
 
   static const _types = [
     (Icons.directions_walk, 'Walking'),
@@ -34,7 +38,38 @@ class _StartActivityScreenState extends State<StartActivityScreen> {
   @override
   void dispose() {
     _name.dispose();
+    _distance.dispose();
+    _duration.dispose();
     super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (_saving) return;
+    final type = _types[_selectedType].$2;
+    final title = _name.text.trim().isEmpty ? type : _name.text.trim();
+    final distanceKm = double.tryParse(_distance.text.trim()) ?? 0;
+    final durationSec = ((double.tryParse(_duration.text.trim()) ?? 0) * 60).round();
+
+    setState(() => _saving = true);
+    try {
+      await ActivityRepository.instance.logActivity(
+        title: title,
+        type: type,
+        distanceKm: distanceKm,
+        durationSec: durationSec,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$type logged')),
+      );
+      Navigator.pop(context);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not save. Check your connection.')),
+      );
+    }
   }
 
   @override
@@ -70,6 +105,30 @@ class _StartActivityScreenState extends State<StartActivityScreen> {
                     hint: 'Enter Activity Name',
                     controller: _name,
                     dark: true,
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          hint: 'Distance (km)',
+                          controller: _distance,
+                          dark: true,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: CustomTextField(
+                          hint: 'Duration (min)',
+                          controller: _duration,
+                          dark: true,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -129,14 +188,9 @@ class _StartActivityScreenState extends State<StartActivityScreen> {
             const SizedBox(height: 24),
 
             GradientButton(
-              label: 'Start Activity',
+              label: _saving ? 'Saving…' : 'Start Activity',
               color: AppColors.accentBlue,
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${_types[_selectedType].$2} started')),
-                );
-                Navigator.pop(context);
-              },
+              onPressed: _save,
             ),
           ],
         ),
