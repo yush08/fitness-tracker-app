@@ -45,7 +45,17 @@ class AppBottomNav extends StatelessWidget {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
-        child: Material(
+        child: Align(
+          // Cap the pill on tablets/foldables so it lines up with the
+          // width-capped body content instead of stretching edge to edge.
+          // heightFactor: 1.0 shrink-wraps the height — WITHOUT it, Align/Center
+          // expands to fill the Scaffold's bounded bottom-bar slot (the full
+          // screen height) and starves the body of vertical space.
+          alignment: Alignment.center,
+          heightFactor: 1.0,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: Material(
           color: Colors.transparent,
           child: Container(
             height: 66,
@@ -55,7 +65,7 @@ class AppBottomNav extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withValues(alpha: 0.25),
                   blurRadius: 24,
                   offset: const Offset(0, 8),
                 ),
@@ -72,6 +82,8 @@ class AppBottomNav extends StatelessWidget {
                     ),
                   ),
               ],
+            ),
+          ),
             ),
           ),
         ),

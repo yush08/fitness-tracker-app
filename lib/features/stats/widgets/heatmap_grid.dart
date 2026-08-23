@@ -18,7 +18,7 @@ class HeatmapGrid extends StatelessWidget {
 
   Color _cellColor(int level) {
     if (level <= 0) return AppColors.surface;
-    return AppColors.accentBlue.withOpacity(0.25 + level * 0.18);
+    return AppColors.accentBlue.withValues(alpha: 0.25 + level * 0.18);
   }
 
   @override

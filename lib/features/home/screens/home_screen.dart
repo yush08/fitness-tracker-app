@@ -7,6 +7,7 @@ import '../../../shared/utils/app_share.dart';
 import '../../../shared/widgets/app_bottom_nav.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/async_view.dart';
+import '../../../shared/widgets/pull_to_refresh.dart';
 import '../../activity/services/activity_repository.dart';
 import '../../main/shell_controller.dart';
 import '../../nutrition/models/meal.dart';
@@ -17,6 +18,7 @@ import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/charts/bar_chart.dart';
 import '../widgets/achievement_card.dart';
+import '../widgets/home_skeleton.dart';
 import '../widgets/summary_gauge_card.dart';
 
 /// The dashboard. Every figure here is derived from the user's own logged data
@@ -29,10 +31,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        child: StaggerReveal(
+    return PullToRefresh(
+      child: StaggerReveal(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           step: const Duration(milliseconds: 55),
           children: [
@@ -40,12 +40,14 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 10),
             AsyncView<UserProfile>(
               stream: UserRepository.instance.watchProfile(),
+              loading: const HomeSkeleton(),
               builder: (profile) {
                 final name = profile.displayName.trim().isEmpty
                     ? 'Athlete'
                     : profile.displayName.trim().split(' ').first;
                 return AsyncView<ActivitySummary>(
                   stream: ActivityRepository.instance.summary(),
+                  loading: const HomeSkeleton(),
                   builder: (summary) => Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -57,6 +59,7 @@ class HomeScreen extends StatelessWidget {
                       // distance from today's activities.
                       AsyncView<List<Meal>>(
                         stream: MealRepository.instance.todaysMeals(),
+                        loading: const SummaryRowSkeleton(),
                         builder: (meals) => _summaryRow(
                           profile,
                           meals.fold<int>(0, (s, m) => s + m.calories),
@@ -85,7 +88,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 

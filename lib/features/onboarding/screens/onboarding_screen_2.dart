@@ -83,7 +83,7 @@ class NextOnboardingScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.4),
+                            color: Colors.white.withValues(alpha: 0.4),
                             width: 1.4,
                           ),
                           gradient: const LinearGradient(
@@ -127,10 +127,10 @@ class NextOnboardingScreen extends StatelessWidget {
                               width: 260,
                               height: 200,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.35),
+                                color: Colors.white.withValues(alpha: 0.35),
                                 borderRadius: BorderRadius.circular(38),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                   width: 1,
                                 ),
                               ),
@@ -144,10 +144,10 @@ class NextOnboardingScreen extends StatelessWidget {
                               width: 270,
                               height: 205,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(38),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                   width: 1,
                                 ),
                               ),
@@ -160,7 +160,7 @@ class NextOnboardingScreen extends StatelessWidget {
                             height: 228,
                             padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF3F1EC).withOpacity(0.95),
+                              color: const Color(0xFFF3F1EC).withValues(alpha: 0.95),
                               borderRadius: BorderRadius.circular(40),
                             ),
                             child: Column(
@@ -282,14 +282,14 @@ class NextOnboardingScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(40),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 width: 1,
                               ),
                               gradient: AppGradients.primaryButtonGradient,
                               boxShadow: [
                                 BoxShadow(
                                   color: const Color(0xFF7B67EC)
-                                      .withOpacity(0.45),
+                                      .withValues(alpha: 0.45),
                                   blurRadius: 20,
                                   offset: const Offset(0, 10),
                                 ),
@@ -330,9 +330,9 @@ class NextOnboardingScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.55),
+                            color: Colors.white.withValues(alpha: 0.55),
                           ),
-                          color: Colors.white.withOpacity(0.20),
+                          color: Colors.white.withValues(alpha: 0.20),
                         ),
                         child: const Icon(
                           Icons.person,

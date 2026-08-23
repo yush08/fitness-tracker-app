@@ -20,14 +20,19 @@ class MealTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                shape: BoxShape.circle,
+            // Shared element: this badge flies up and grows into the header
+            // of MealDetailScreen. Tag mirrors MealDetailScreen.heroTag(id).
+            Hero(
+              tag: 'meal-icon-${meal.id}',
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(meal.icon, color: meal.iconColor, size: 20),
               ),
-              child: Icon(meal.icon, color: meal.iconColor, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(

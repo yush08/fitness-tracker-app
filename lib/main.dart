@@ -45,6 +45,21 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.dark,
           home: const AuthGate(),
           onGenerateRoute: AppRoutes.onGenerateRoute,
+          // Clamp the OS font scale so very large accessibility text still
+          // fits the app's fixed-height buttons, nav pill and gauge tiles
+          // (it stays adjustable within a safe range instead of overflowing).
+          builder: (context, child) {
+            final media = MediaQuery.of(context);
+            return MediaQuery(
+              data: media.copyWith(
+                textScaler: media.textScaler.clamp(
+                  minScaleFactor: 0.9,
+                  maxScaleFactor: 1.3,
+                ),
+              ),
+              child: child ?? const SizedBox.shrink(),
+            );
+          },
         );
       },
     );

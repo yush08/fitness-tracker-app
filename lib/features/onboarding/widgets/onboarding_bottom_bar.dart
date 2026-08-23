@@ -74,19 +74,19 @@ class OnboardingBottomBar extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(0.38),
-                    Colors.white.withOpacity(0.18),
+                    Colors.white.withValues(alpha: 0.38),
+                    Colors.white.withValues(alpha: 0.18),
                   ],
                 ),
-                border: Border.all(color: Colors.white.withOpacity(0.55)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.55)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.18),
+                    color: Colors.black.withValues(alpha: 0.18),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                     blurRadius: 10,
                     spreadRadius: -4,
                     offset: const Offset(-5, -5),

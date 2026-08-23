@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../shared/widgets/animations/entrance.dart';
+import '../../../shared/widgets/animations/skeletons.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/async_view.dart';
+import '../../../shared/widgets/pull_to_refresh.dart';
 import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/charts/line_chart.dart';
 import '../../activity/services/activity_repository.dart';
@@ -17,10 +19,8 @@ class StatisticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        child: StaggerReveal(
+    return PullToRefresh(
+      child: StaggerReveal(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           step: const Duration(milliseconds: 60),
           children: [
@@ -30,6 +30,7 @@ class StatisticsScreen extends StatelessWidget {
             const SizedBox(height: 18),
             AsyncView<ActivitySummary>(
               stream: ActivityRepository.instance.summary(),
+              loading: const StatsSkeleton(),
               builder: (s) => Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -88,7 +89,6 @@ class StatisticsScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 

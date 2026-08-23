@@ -92,7 +92,7 @@ class _BarPainter extends CustomPainter {
     double toY(double v) => plot.bottom - (v / maxY) * plot.height;
 
     final grid = Paint()
-      ..color = AppColors.border.withOpacity(0.6)
+      ..color = AppColors.border.withValues(alpha: 0.6)
       ..strokeWidth = 1;
     for (final t in yTicks) {
       final y = toY(t);
@@ -122,7 +122,7 @@ class _BarPainter extends CustomPainter {
           ..shader = LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [barColor, barColor.withOpacity(0.65)],
+            colors: [barColor, barColor.withValues(alpha: 0.65)],
           ).createShader(barRect),
       );
       if (i < xLabels.length) {

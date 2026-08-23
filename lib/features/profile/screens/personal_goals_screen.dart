@@ -215,7 +215,7 @@ class _GoalSlider extends StatelessWidget {
                 activeTrackColor: color,
                 thumbColor: color,
                 inactiveTrackColor: AppColors.surface,
-                overlayColor: color.withOpacity(0.15),
+                overlayColor: color.withValues(alpha: 0.15),
                 trackHeight: 4,
               ),
               child: Slider(

@@ -116,7 +116,7 @@ class _LinePainter extends CustomPainter {
 
     // Grid lines + y labels.
     final grid = Paint()
-      ..color = AppColors.border.withOpacity(0.6)
+      ..color = AppColors.border.withValues(alpha: 0.6)
       ..strokeWidth = 1;
     for (final t in yTicks) {
       final y = toY(t);
@@ -158,7 +158,7 @@ class _LinePainter extends CustomPainter {
     if (overlay <= 0) return;
 
     if (showDots) {
-      final dot = Paint()..color = lineColor.withOpacity(overlay);
+      final dot = Paint()..color = lineColor.withValues(alpha: overlay);
       for (final p in pts) {
         canvas.drawCircle(p, 3.2, dot);
       }

@@ -39,7 +39,7 @@ class DarkCard extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: const Color(0xFF0F172A).withOpacity(0.05),
+                  color: const Color(0xFF0F172A).withValues(alpha: 0.05),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

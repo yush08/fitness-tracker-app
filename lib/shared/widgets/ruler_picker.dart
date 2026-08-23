@@ -105,7 +105,7 @@ class _RulerPainter extends CustomPainter {
     final centerX = size.width / 2;
     const topY = 6.0;
     final tickPaint = Paint()
-      ..color = Colors.white.withOpacity(0.85)
+      ..color = Colors.white.withValues(alpha: 0.85)
       ..strokeWidth = 1.4;
 
     final half = (size.width / 2 / pixelsPerUnit).ceil() + 1;

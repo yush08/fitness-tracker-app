@@ -91,7 +91,7 @@ class OnboardingScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                           width: 1.4,
                         ),
                         gradient: const LinearGradient(
@@ -263,13 +263,13 @@ class OnboardingScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                           width: 1,
                         ),
                         gradient: AppGradients.primaryButtonGradient,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF7B67EC).withOpacity(0.45),
+                            color: const Color(0xFF7B67EC).withValues(alpha: 0.45),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -309,9 +309,9 @@ class OnboardingScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.55),
+                          color: Colors.white.withValues(alpha: 0.55),
                         ),
-                        color: Colors.white.withOpacity(0.20),
+                        color: Colors.white.withValues(alpha: 0.20),
                       ),
 
                       child: const Icon(
@@ -357,7 +357,7 @@ Widget _glassCard({
           borderRadius: BorderRadius.circular(50),
 
           border: Border.all(
-            color: Colors.white.withOpacity(0.50),
+            color: Colors.white.withValues(alpha: 0.50),
             width: 1,
           ),
 
@@ -365,8 +365,8 @@ Widget _glassCard({
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.grey.withOpacity(0.30),
-              Colors.grey.withOpacity(0.20),
+              Colors.grey.withValues(alpha: 0.30),
+              Colors.grey.withValues(alpha: 0.20),
             ],
           ),
         ),
@@ -411,7 +411,7 @@ Widget _glassCard({
               style: TextStyle(
                 fontSize: 13,
                 height: 1.4,
-                color: Colors.white.withOpacity(0.88),
+                color: Colors.white.withValues(alpha: 0.88),
               ),
             ),
           ],

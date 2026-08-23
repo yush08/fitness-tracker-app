@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../shared/widgets/animations/entrance.dart';
+import '../../../shared/widgets/animations/skeletons.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/async_view.dart';
+import '../../../shared/widgets/pull_to_refresh.dart';
 import '../../../shared/widgets/custom_textfield.dart';
 import '../../../shared/widgets/dark_card.dart';
 import '../../../shared/widgets/charts/donut_chart.dart';
@@ -14,36 +16,36 @@ import '../../profile/services/user_repository.dart';
 import '../models/meal.dart';
 import '../services/meal_repository.dart';
 import '../widgets/meal_tile.dart';
+import 'meal_detail_screen.dart';
 
 class CalorieTrackingScreen extends StatelessWidget {
   const CalorieTrackingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        child: StaggerReveal(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          step: const Duration(milliseconds: 55),
-          children: [
-            const AppLogo(),
-            const SizedBox(height: 12),
-            Text('Calorie tracking', style: AppTextStyles.screenTitle),
-            const SizedBox(height: 16),
+    return PullToRefresh(
+      child: StaggerReveal(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        step: const Duration(milliseconds: 55),
+        children: [
+          const AppLogo(),
+          const SizedBox(height: 12),
+          Text('Calorie tracking', style: AppTextStyles.screenTitle),
+          const SizedBox(height: 16),
 
-            // Live goal + meals. Both depend on the user's daily calorie goal,
-            // so the goal (profile) stream wraps the meals stream.
-            AsyncView<UserProfile>(
-              stream: UserRepository.instance.watchProfile(),
-              builder: (profile) => AsyncView<List<Meal>>(
-                stream: MealRepository.instance.todaysMeals(),
-                builder: (meals) =>
-                    _LiveSection(goal: profile.goals.dailyCalories, meals: meals),
-              ),
+          // Live goal + meals. Both depend on the user's daily calorie goal,
+          // so the goal (profile) stream wraps the meals stream.
+          AsyncView<UserProfile>(
+            stream: UserRepository.instance.watchProfile(),
+            loading: const CalorieSkeleton(),
+            builder: (profile) => AsyncView<List<Meal>>(
+              stream: MealRepository.instance.todaysMeals(),
+              loading: const CalorieSkeleton(),
+              builder: (meals) =>
+                  _LiveSection(goal: profile.goals.dailyCalories, meals: meals),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -130,7 +132,14 @@ class _LiveSection extends StatelessWidget {
                           color: AppColors.chartRed, size: 22),
                     ),
                     onDismissed: (_) => _deleteWithUndo(context, meal),
-                    child: MealTile(meal: meal),
+                    child: MealTile(
+                      meal: meal,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => MealDetailScreen(meal: meal),
+                        ),
+                      ),
+                    ),
                   ),
             ],
           ),

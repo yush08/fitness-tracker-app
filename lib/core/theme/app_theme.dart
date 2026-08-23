@@ -31,7 +31,7 @@ class AppTheme {
         displayColor: AppColors.textPrimary,
       ),
       iconTheme: IconThemeData(color: AppColors.textPrimary),
-      splashColor: AppColors.accentBlue.withOpacity(0.12),
+      splashColor: AppColors.accentBlue.withValues(alpha: 0.12),
       highlightColor: Colors.transparent,
     );
   }

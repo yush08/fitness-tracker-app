@@ -5,9 +5,11 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../shared/widgets/animations/entrance.dart';
 import '../../../shared/widgets/animations/pressable.dart';
+import '../../../shared/widgets/animations/skeletons.dart';
 import '../../../shared/utils/app_share.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/async_view.dart';
+import '../../../shared/widgets/pull_to_refresh.dart';
 import '../models/activity_post.dart';
 import '../services/activity_repository.dart';
 import '../widgets/activity_feed_card.dart';
@@ -17,10 +19,8 @@ class ActivityFeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        child: StaggerReveal(
+    return PullToRefresh(
+      child: StaggerReveal(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         step: const Duration(milliseconds: 60),
         children: [
@@ -54,6 +54,7 @@ class ActivityFeedScreen extends StatelessWidget {
           const SizedBox(height: 18),
           AsyncView<List<ActivityPost>>(
             stream: ActivityRepository.instance.feed(),
+            loading: const FeedSkeleton(),
             isEmpty: (posts) => posts.isEmpty,
             empty: const EmptyState(
               icon: Icons.directions_run_rounded,
@@ -71,7 +72,6 @@ class ActivityFeedScreen extends StatelessWidget {
           ),
         ],
         ),
-      ),
     );
   }
 

@@ -39,21 +39,21 @@ class Clay {
       boxShadow: [
         // Deep, soft drop shadow — the "floating clay" lift.
         BoxShadow(
-          color: darken(base, 0.30).withOpacity(0.42 * depth),
+          color: darken(base, 0.30).withValues(alpha: 0.42 * depth),
           blurRadius: 28,
           spreadRadius: -4,
           offset: const Offset(0, 16),
         ),
         // Tight contact shadow so it sits, rather than hovers.
         BoxShadow(
-          color: Colors.black.withOpacity(0.16 * depth),
+          color: Colors.black.withValues(alpha: 0.16 * depth),
           blurRadius: 10,
           offset: const Offset(0, 6),
         ),
         // Top-left rim light — the puffy clay highlight. Kept tight and low
         // so it reads as a soft edge, not a glow, on dark backgrounds.
         BoxShadow(
-          color: lighten(base, 0.20).withOpacity(0.32),
+          color: lighten(base, 0.20).withValues(alpha: 0.32),
           blurRadius: 8,
           spreadRadius: -10,
           offset: const Offset(-5, -6),
@@ -88,8 +88,8 @@ class ClayGloss extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.white.withOpacity(opacity),
-                      Colors.white.withOpacity(0.0),
+                      Colors.white.withValues(alpha: opacity),
+                      Colors.white.withValues(alpha: 0.0),
                     ],
                   ),
                 ),

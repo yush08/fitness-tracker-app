@@ -158,8 +158,8 @@ class OnboardingScreen3 extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFFE7E3F3).withOpacity(0.80),
-            Colors.white.withOpacity(0.98),
+            const Color(0xFFE7E3F3).withValues(alpha: 0.80),
+            Colors.white.withValues(alpha: 0.98),
           ],
         ),
       ),
@@ -215,7 +215,7 @@ class OnboardingScreen3 extends StatelessWidget {
                       gradient: AppGradients.primaryButtonGradient,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF7B67EC).withOpacity(0.4),
+                          color: const Color(0xFF7B67EC).withValues(alpha: 0.4),
                           blurRadius: 18,
                           offset: const Offset(0, 8),
                         ),
@@ -254,9 +254,9 @@ class OnboardingScreen3 extends StatelessWidget {
                   height: 62,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF7B67EC).withOpacity(0.12),
+                    color: const Color(0xFF7B67EC).withValues(alpha: 0.12),
                     border: Border.all(
-                      color: const Color(0xFF7B67EC).withOpacity(0.5),
+                      color: const Color(0xFF7B67EC).withValues(alpha: 0.5),
                     ),
                   ),
                   child: const Icon(
