@@ -429,7 +429,7 @@ For iOS/macOS development, Xcode is also required.
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/yush08/fitness-tracker-app
 cd fitness-tracker-app-main
 ```
 
